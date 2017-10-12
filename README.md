@@ -12,7 +12,7 @@ dwyl has a good-sized collection of books on a variety of subjects, chiefly:
 + Psychology
 
 We look to actively encourage dwylers to borrow and use these books
-(see https://github.com/dwyl/summer/issues/31) but routinely run up against a few issues problems:
+(see https://github.com/dwyl/summer/issues/31) but routinely run up against a few issues problems which we need to resolve:
 + With no way of tracking who has borrowed these books, they are often forgotten and go missing (ontop of this we share an office space
 where we don't have the contact details for those who are not dwylers)
 + It became clear from our previous attempts to capture key lessons and feedback
@@ -23,5 +23,30 @@ and the knowledge will be lost
 + Current requests for books are verbal and we need a more efficient way of
 capturing this so that we can automate the decision-making process
 
+## What?
 Preliminary research indicates that the current open source _library_ software that exists
 is both complex and adheres to the rules that govern traditional _libraries_.
+
+We aim to build something ***simple*** which _minimises dependencies_ (reducing maintenance) and is _fully tested_.
+
+The embryonic first iteration of the application will allow dwylers to carry out a small number of essential tasks:
++ Search for books
++ See the information for the searched book
++ Determine whether or not the book already exists in the dwyl library
++ If the book is part of the library:
+  + Open the listing to see more information
+  + Check whether the book is currently checked out by another dwyler
+    + If this is the case, add themselves to a _waitlist_ for the book which triggers
+    an email to the current dwyler who has the book to let them know someone else
+    has an interest in reading the book (MVP iteration)
+  + If the book is part of the library and available, check it out
++ If the book is not part of the library:
+  + Add a request for dwyl to acquire the book
+  + This must include filling in a one question form to explain why
+  + Allow an admin to mark the book as part of the library, so that when new books are purchased
+  they can easily be added
++ Check in the book when it is returned
+  + This should include adding the answer to two short questions as a review
+
+
+  + Favourite the book
