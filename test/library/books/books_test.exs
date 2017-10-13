@@ -163,7 +163,8 @@ defmodule Library.BooksTest do
 
     test "update_author/2 with invalid data returns error changeset" do
       author = author_fixture()
-      assert {:error, %Ecto.Changeset{}} = Books.update_author(author, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} =
+        Books.update_author(author, @invalid_attrs)
       assert author == Books.get_author!(author.id)
     end
 
