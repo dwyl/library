@@ -3,9 +3,8 @@ defmodule Library.Books.Book do
   import Ecto.Changeset
   alias Library.Books.Book
 
-
   schema "books" do
-    field :authors, {:array, :string}
+    field :author_list, {:array, :string}
     field :category, :string
     field :date_published, :string
     field :isbn_10, :string
@@ -17,6 +16,7 @@ defmodule Library.Books.Book do
     field :thumbnail_small, :string
     field :title, :string
     field :type, :string
+    many_to_many :author, Library.Books.Author, join_through: "author_books"
 
     timestamps()
   end
@@ -24,7 +24,7 @@ defmodule Library.Books.Book do
   @doc false
   def changeset(%Book{} = book, attrs) do
     book
-    |> cast(attrs, [:title, :authors, :date_published, :isbn_13, :isbn_10, :type, :category, :thumbnail_small, :thumbnail, :preview_link, :language, :owned])
-    |> validate_required([:title, :authors, :owned])
+    |> cast(attrs, [:title, :author_list, :date_published, :isbn_13, :isbn_10, :type, :category, :thumbnail_small, :thumbnail, :preview_link, :language, :owned])
+    |> validate_required([:title, :author_list, :owned])
   end
 end

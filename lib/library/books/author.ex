@@ -2,10 +2,12 @@ defmodule Library.Books.Author do
   use Ecto.Schema
   import Ecto.Changeset
   alias Library.Books.Author
+  alias Library.Books
 
 
   schema "authors" do
     field :author, :string
+    many_to_many :book, Library.Books.Book, join_through: "author_books"
 
     timestamps()
   end
