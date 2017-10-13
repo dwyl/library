@@ -2,5 +2,14 @@
   "coverage_options": {
     "minimum_coverage": 100
   },
-  "skip_files": []
+  "skip_files": [
+    "lib/library_web/channels",
+    "lib/library.ex",
+    "lib/library_web.ex",
+    "test/support",
+    "lib/library_web/router.ex",
+    "lib/library_web/views",
+    "lib/library/application.ex",
+    "lib/library_web/endpoint.ex"
+  ]
 }
