@@ -22,7 +22,7 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :pre_commit, commands: ["test"]
+config :pre_commit, commands: ["test", "credo --strict"]
 
 config :elixir_auth_github,
   client_id: System.get_env("CLIENT_ID"),
