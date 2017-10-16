@@ -38,6 +38,7 @@ defmodule LibraryWeb do
       use Phoenix.HTML
 
       import LibraryWeb.Router.Helpers
+      import LibraryWeb.ComponentHelpers
       import LibraryWeb.ErrorHelpers
       import LibraryWeb.Gettext
     end

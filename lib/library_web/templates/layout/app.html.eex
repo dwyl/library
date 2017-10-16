@@ -8,16 +8,28 @@
     <meta name="author" content="">
 
     <title>dwyl | Library</title>
+    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.6.1/css/tachyons.min.css"/>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
-  <body>
-    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+  <body class="bg-light-grey">
+    <div class="h3 pb1 pt2">
+      <img src="/images/dwyl-heart-only-logo-white.png" class="w3-5 mt1 db center"/>
+    </div>
+    <nav class="h3 pb1 pt2 fixed w-100 bg-dwyl-teal top-0">
+      <img src="/images/dwyl-heart-only-logo-white.png" class="w3-5 mt1 db center"/>
+      <div class="right-0 top-0 absolute pt3">
+        <a href="/search" class="link db white fr f5 mr3 mt1 mb1">Search</a>
+        <a href="/feedback class" class="link db white right f5 mr3">Feedback</a>
+      </div>
+    </nav>
 
     <main role="main">
       <%= render @view_module, @view_template, assigns %>
     </main>
+
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
