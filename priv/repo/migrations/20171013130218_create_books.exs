@@ -3,8 +3,8 @@ defmodule Library.Repo.Migrations.CreateBooks do
 
   def change do
     create table(:books) do
-      add :title, :string
-      add :author_list, {:array, :string}
+      add :title, :string, null: false
+      add :author_list, {:array, :string}, null: false
       add :date_published, :string
       add :isbn_13, :string
       add :isbn_10, :string

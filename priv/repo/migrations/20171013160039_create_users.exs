@@ -3,11 +3,11 @@ defmodule Library.Repo.Migrations.CreateUsers do
 
   def change do
     create table(:users) do
-      add :username, :string
-      add :first_name, :string
-      add :email, :string
-      add :orgs, {:array, :string}
-      add :is_admin, :string
+      add :username, :string, null: false
+      add :first_name, :string, null: false
+      add :email, :string, null: false
+      add :orgs, {:array, :string}, null: false
+      add :is_admin, :boolean
 
       timestamps()
     end

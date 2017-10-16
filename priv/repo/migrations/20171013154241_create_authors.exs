@@ -3,7 +3,7 @@ defmodule Library.Repo.Migrations.CreateAuthors do
 
   def change do
     create table(:authors) do
-      add :author, :string
+      add :author, :string, null: false
 
       timestamps()
     end

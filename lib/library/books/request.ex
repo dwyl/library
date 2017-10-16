@@ -5,8 +5,8 @@ defmodule Library.Books.Request do
 
 
   schema "requests" do
-    field :book_id, :id
-    field :user_id, :id
+    belongs_to :user, Library.Users.User
+    belongs_to :book, Library.Books.Book
 
     timestamps()
   end
@@ -14,7 +14,7 @@ defmodule Library.Books.Request do
   @doc false
   def changeset(%Request{} = request, attrs) do
     request
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:user_id, :book_id])
+    |> validate_required([:user_id, :book_id])
   end
 end

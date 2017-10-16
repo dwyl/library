@@ -6,8 +6,8 @@ defmodule Library.Books.BookLoan do
 
   schema "book_loans" do
     field :queue, {:array, :integer}
-    field :book_id, :id
-    field :user_id, :id
+    belongs_to :user, Library.Users.User
+    belongs_to :book, Library.Books.Book
 
     timestamps()
   end
@@ -15,7 +15,7 @@ defmodule Library.Books.BookLoan do
   @doc false
   def changeset(%BookLoan{} = book_loan, attrs) do
     book_loan
-    |> cast(attrs, [:queue])
-    |> validate_required([:queue])
+    |> cast(attrs, [:queue, :book_id, :user_id])
+    |> validate_required([:book_id, :user_id])
   end
 end

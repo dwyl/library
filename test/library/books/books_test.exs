@@ -5,6 +5,7 @@ defmodule Library.BooksTest do
 
   describe "books" do
     alias Library.Books.Book
+    alias Library.Users
 
     @valid_attrs %{author_list: ["some author"],
                    category: "some category",
@@ -220,15 +221,23 @@ defmodule Library.BooksTest do
 
   describe "requests" do
     alias Library.Books.Request
+    alias Library.Users
 
-    @valid_attrs %{}
-    @update_attrs %{}
+    @valid_attrs %{book_id: 1, user_id: 1}
+    @update_attrs %{user_id: 1}
 
     def request_fixture(attrs \\ %{}) do
+
+      book = Books.create_book!(%{title: "A book", author_list: ["An Author"]})
+      {:ok, user} = Users.create_user(%{email: "a@a.com",
+                                 first_name: "a",
+                                 orgs: ["a inc"],
+                                 username: "a"})
+
       {:ok, request} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Books.create_request()
+        |> Books.create_request!(user, book)
 
       request
     end
@@ -244,12 +253,15 @@ defmodule Library.BooksTest do
     end
 
     test "create_request/1 with valid data creates a request" do
-      assert {:ok, %Request{} = _request} = Books.create_request(@valid_attrs)
+      {user, book} = book_and_user_fixture()
+      assert {:ok, %Request{} = _request} =
+         Books.create_request!(@valid_attrs, user, book)
     end
 
     test "update_request/2 with valid data updates the request" do
       request = request_fixture()
-      assert {:ok, request} = Books.update_request(request, @update_attrs)
+      %{id: id} = Books.create_book!(%{title: "A book", author_list: ["An Author"]})
+      assert {:ok, request} = Books.update_request(request, %{book_id: id})
       assert %Request{} = request
     end
 
@@ -262,16 +274,32 @@ defmodule Library.BooksTest do
 
   describe "book_loans" do
     alias Library.Books.BookLoan
+    alias Library.Users
 
-    @valid_attrs %{queue: []}
-    @update_attrs %{queue: []}
-    @invalid_attrs %{queue: nil}
+    @valid_attrs %{queue: [1, 2, 3], book_id: 1, user_id: 1}
+    @update_attrs %{queue: [1, 2, 3, 4]}
+    @invalid_attrs %{queue: nil, book_id: 1, user_id: 1}
+
+    def book_and_user_fixture do
+      book = Books.create_book!(%{title: "A book", author_list: ["An Author"]})
+      {:ok, user} = Users.create_user(%{email: "a@a.com",
+                                 first_name: "a",
+                                 orgs: ["a inc"],
+                                 username: "a"})
+
+      {user, book}
+    end
 
     def book_loan_fixture(attrs \\ %{}) do
+      book = Books.create_book!(%{title: "A book", author_list: ["An Author"]})
+      {:ok, user} = Users.create_user(%{email: "a@a.com",
+                                 first_name: "a",
+                                 orgs: ["a inc"],
+                                 username: "a"})
       {:ok, book_loan} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Books.create_book_loan()
+        |> Books.create_book_loan!(user, book)
 
       book_loan
     end
@@ -286,29 +314,19 @@ defmodule Library.BooksTest do
       assert Books.get_book_loan!(book_loan.id) == book_loan
     end
 
-    test "create_book_loan/1 with valid data creates a book_loan" do
-      assert {:ok, %BookLoan{} = book_loan} =
-         Books.create_book_loan(@valid_attrs)
-      assert book_loan.queue == []
-    end
+    test "create_book_loan!/1 with valid data creates a book_loan" do
+      {user, book} = book_and_user_fixture()
 
-    test "create_book_loan/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} =
-         Books.create_book_loan(@invalid_attrs)
+      assert {:ok, %BookLoan{} = book_loan} =
+         Books.create_book_loan!(@valid_attrs, user, book)
+      assert book_loan.queue == [1, 2, 3]
     end
 
     test "update_book_loan/2 with valid data updates the book_loan" do
       book_loan = book_loan_fixture()
       assert {:ok, book_loan} = Books.update_book_loan(book_loan, @update_attrs)
       assert %BookLoan{} = book_loan
-      assert book_loan.queue == []
-    end
-
-    test "update_book_loan/2 with invalid data returns error changeset" do
-      book_loan = book_loan_fixture()
-      assert {:error, %Ecto.Changeset{}} =
-        Books.update_book_loan(book_loan, @invalid_attrs)
-      assert book_loan == Books.get_book_loan!(book_loan.id)
+      assert book_loan.queue == [1, 2, 3, 4]
     end
 
     test "delete_book_loan/1 deletes the book_loan" do

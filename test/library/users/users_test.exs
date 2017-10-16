@@ -8,12 +8,12 @@ defmodule Library.UsersTest do
 
     @valid_attrs %{email: "some email",
                   first_name: "some first_name",
-                  is_admin: "some is_admin",
+                  is_admin: false,
                   orgs: [],
                   username: "some username"}
     @update_attrs %{email: "some updated email",
                   first_name: "some updated first_name",
-                  is_admin: "some updated is_admin",
+                  is_admin: true,
                   orgs: [],
                   username: "some updated username"}
     @invalid_attrs %{email: nil,
@@ -45,7 +45,7 @@ defmodule Library.UsersTest do
       assert {:ok, %User{} = user} = Users.create_user(@valid_attrs)
       assert user.email == "some email"
       assert user.first_name == "some first_name"
-      assert user.is_admin == "some is_admin"
+      assert user.is_admin == false
       assert user.orgs == []
       assert user.username == "some username"
     end
@@ -60,7 +60,7 @@ defmodule Library.UsersTest do
       assert %User{} = user
       assert user.email == "some updated email"
       assert user.first_name == "some updated first_name"
-      assert user.is_admin == "some updated is_admin"
+      assert user.is_admin == true
       assert user.orgs == []
       assert user.username == "some updated username"
     end

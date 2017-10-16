@@ -4,8 +4,8 @@ defmodule Library.Repo.Migrations.CreateBookLoans do
   def change do
     create table(:book_loans) do
       add :queue, {:array, :integer}
-      add :book_id, references(:books, on_delete: :nothing)
-      add :user_id, references(:users, on_delete: :nothing)
+      add :book_id, references(:books, on_delete: :delete_all)
+      add :user_id, references(:users, on_delete: :delete_all)
 
       timestamps()
     end

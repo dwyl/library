@@ -364,9 +364,11 @@ defmodule Library.Books do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_request(attrs \\ %{}) do
+  def create_request!(attrs \\ %{}, user, book) do
+    user_assoc = Ecto.build_assoc(user, :request, attrs)
+    user_assoc_two = Ecto.build_assoc(book, :request, user_assoc)
     %Request{}
-    |> Request.changeset(attrs)
+    |> Request.changeset(Map.from_struct user_assoc_two)
     |> Repo.insert()
   end
 
@@ -447,9 +449,11 @@ defmodule Library.Books do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_book_loan(attrs \\ %{}) do
+  def create_book_loan!(attrs \\ %{}, user, book) do
+    user_assoc = Ecto.build_assoc(user, :book_loan, attrs)
+    user_assoc_two = Ecto.build_assoc(book, :book_loan, user_assoc)
     %BookLoan{}
-    |> BookLoan.changeset(attrs)
+    |> BookLoan.changeset(Map.from_struct user_assoc_two)
     |> Repo.insert()
   end
 
