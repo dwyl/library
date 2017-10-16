@@ -259,4 +259,68 @@ defmodule Library.BooksTest do
       assert_raise Ecto.NoResultsError, fn -> Books.get_request!(request.id) end
     end
   end
+
+  describe "book_loans" do
+    alias Library.Books.BookLoan
+
+    @valid_attrs %{queue: []}
+    @update_attrs %{queue: []}
+    @invalid_attrs %{queue: nil}
+
+    def book_loan_fixture(attrs \\ %{}) do
+      {:ok, book_loan} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Books.create_book_loan()
+
+      book_loan
+    end
+
+    test "list_book_loans/0 returns all book_loans" do
+      book_loan = book_loan_fixture()
+      assert Books.list_book_loans() == [book_loan]
+    end
+
+    test "get_book_loan!/1 returns the book_loan with given id" do
+      book_loan = book_loan_fixture()
+      assert Books.get_book_loan!(book_loan.id) == book_loan
+    end
+
+    test "create_book_loan/1 with valid data creates a book_loan" do
+      assert {:ok, %BookLoan{} = book_loan} =
+         Books.create_book_loan(@valid_attrs)
+      assert book_loan.queue == []
+    end
+
+    test "create_book_loan/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} =
+         Books.create_book_loan(@invalid_attrs)
+    end
+
+    test "update_book_loan/2 with valid data updates the book_loan" do
+      book_loan = book_loan_fixture()
+      assert {:ok, book_loan} = Books.update_book_loan(book_loan, @update_attrs)
+      assert %BookLoan{} = book_loan
+      assert book_loan.queue == []
+    end
+
+    test "update_book_loan/2 with invalid data returns error changeset" do
+      book_loan = book_loan_fixture()
+      assert {:error, %Ecto.Changeset{}} =
+        Books.update_book_loan(book_loan, @invalid_attrs)
+      assert book_loan == Books.get_book_loan!(book_loan.id)
+    end
+
+    test "delete_book_loan/1 deletes the book_loan" do
+      book_loan = book_loan_fixture()
+      assert {:ok, %BookLoan{}} = Books.delete_book_loan(book_loan)
+      assert_raise Ecto.NoResultsError, fn ->
+         Books.get_book_loan!(book_loan.id) end
+    end
+
+    test "change_book_loan/1 returns a book_loan changeset" do
+      book_loan = book_loan_fixture()
+      assert %Ecto.Changeset{} = Books.change_book_loan(book_loan)
+    end
+  end
 end

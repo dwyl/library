@@ -37,7 +37,18 @@ defmodule Library.Books do
 
   """
   def get_book!(id), do: Repo.get!(Book, id)
+  @doc """
+  Gets a book using the title
 
+  Gives nil if no book with that title exists
+
+  ## Examples
+  iex> get_book_by_title("harry potter")
+  %Book{}
+
+  iex> get_book_by_title("not a title")
+  nil
+"""
   def get_book_by_title(title), do: Repo.get_by!(Book, title: title)
 
   @doc """
@@ -391,5 +402,101 @@ defmodule Library.Books do
   """
   def delete_request(%Request{} = request) do
     Repo.delete(request)
+  end
+
+  alias Library.Books.BookLoan
+
+  @doc """
+  Returns the list of book_loans.
+
+  ## Examples
+
+      iex> list_book_loans()
+      [%BookLoan{}, ...]
+
+  """
+  def list_book_loans do
+    Repo.all(BookLoan)
+  end
+
+  @doc """
+  Gets a single book_loan.
+
+  Raises `Ecto.NoResultsError` if the Book loan does not exist.
+
+  ## Examples
+
+      iex> get_book_loan!(123)
+      %BookLoan{}
+
+      iex> get_book_loan!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_book_loan!(id), do: Repo.get!(BookLoan, id)
+
+  @doc """
+  Creates a book_loan.
+
+  ## Examples
+
+      iex> create_book_loan(%{field: value})
+      {:ok, %BookLoan{}}
+
+      iex> create_book_loan(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_book_loan(attrs \\ %{}) do
+    %BookLoan{}
+    |> BookLoan.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a book_loan.
+
+  ## Examples
+
+      iex> update_book_loan(book_loan, %{field: new_value})
+      {:ok, %BookLoan{}}
+
+      iex> update_book_loan(book_loan, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_book_loan(%BookLoan{} = book_loan, attrs) do
+    book_loan
+    |> BookLoan.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a BookLoan.
+
+  ## Examples
+
+      iex> delete_book_loan(book_loan)
+      {:ok, %BookLoan{}}
+
+      iex> delete_book_loan(book_loan)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_book_loan(%BookLoan{} = book_loan) do
+    Repo.delete(book_loan)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking book_loan changes.
+
+  ## Examples
+
+      iex> change_book_loan(book_loan)
+      %Ecto.Changeset{source: %BookLoan{}}
+
+  """
+  def change_book_loan(%BookLoan{} = book_loan) do
+    BookLoan.changeset(book_loan, %{})
   end
 end
