@@ -121,14 +121,15 @@ defmodule Library.BooksTest do
 
     test "create_book_authors/1 adds a book and all the listed authors" do
       Books.create_book_authors!(%{title: "some book", author_list: ["some author", "another author"]})
-      Books.create_book_authors!(%{title: "another book", author_list: ["some author", "another author"]})
+      Books.create_book_authors!(%{title: "another book", author_list: ["some author"]})
+
       [%{title: title}, %{title: title_two}] = Books.list_books
-      %{author: author_one} = Books.get_author_by_name("some author")
-      %{author: author_two} = Books.get_author_by_name("another author")
+
+      authors = Books.list_authors()
+
       assert title == "some book"
       assert title_two == "another book"
-      assert author_one == "some author"
-      assert author_two == "another author"
+      assert Enum.count(authors) == 2
     end
   end
 
@@ -157,7 +158,7 @@ defmodule Library.BooksTest do
     Books.create_book_authors!(%{title: "another book",
                                 author_list: ["some author"]})
 
-    [book_one, book_two] = Books.list_books
+    [book_one, _book_two] = Books.list_books
 
     assert Enum.count(Books.list_authors) == 2
     assert Enum.count(Books.list_books) == 2
@@ -243,7 +244,7 @@ defmodule Library.BooksTest do
     end
 
     test "create_request/1 with valid data creates a request" do
-      assert {:ok, %Request{} = request} = Books.create_request(@valid_attrs)
+      assert {:ok, %Request{} = _request} = Books.create_request(@valid_attrs)
     end
 
     test "update_request/2 with valid data updates the request" do
@@ -256,54 +257,6 @@ defmodule Library.BooksTest do
       request = request_fixture()
       assert {:ok, %Request{}} = Books.delete_request(request)
       assert_raise Ecto.NoResultsError, fn -> Books.get_request!(request.id) end
-    end
-  end
-
-  describe "requests" do
-    alias Library.Books.Request
-
-    @valid_attrs %{}
-    @update_attrs %{}
-    @invalid_attrs %{}
-
-    def request_fixture(attrs \\ %{}) do
-      {:ok, request} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Books.create_request()
-
-      request
-    end
-
-    test "list_requests/0 returns all requests" do
-      request = request_fixture()
-      assert Books.list_requests() == [request]
-    end
-
-    test "get_request!/1 returns the request with given id" do
-      request = request_fixture()
-      assert Books.get_request!(request.id) == request
-    end
-
-    test "create_request/1 with valid data creates a request" do
-      assert {:ok, %Request{} = request} = Books.create_request(@valid_attrs)
-    end
-
-    test "update_request/2 with valid data updates the request" do
-      request = request_fixture()
-      assert {:ok, request} = Books.update_request(request, @update_attrs)
-      assert %Request{} = request
-    end
-
-    test "delete_request/1 deletes the request" do
-      request = request_fixture()
-      assert {:ok, %Request{}} = Books.delete_request(request)
-      assert_raise Ecto.NoResultsError, fn -> Books.get_request!(request.id) end
-    end
-
-    test "change_request/1 returns a request changeset" do
-      request = request_fixture()
-      assert %Ecto.Changeset{} = Books.change_request(request)
     end
   end
 end
