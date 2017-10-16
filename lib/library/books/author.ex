@@ -2,8 +2,6 @@ defmodule Library.Books.Author do
   use Ecto.Schema
   import Ecto.Changeset
   alias Library.Books.Author
-  alias Library.Books
-
 
   schema "authors" do
     field :author, :string

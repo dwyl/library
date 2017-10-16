@@ -38,6 +38,8 @@ defmodule Library.Books do
   """
   def get_book!(id), do: Repo.get!(Book, id)
 
+  def get_book_by_title(title), do: Repo.get_by!(Book, title: title)
+
   @doc """
   Updates a book to be owned.
 

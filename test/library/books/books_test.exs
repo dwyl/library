@@ -158,7 +158,7 @@ defmodule Library.BooksTest do
     Books.create_book_authors!(%{title: "another book",
                                 author_list: ["some author"]})
 
-    [book_one, _book_two] = Books.list_books
+    book_one = Books.get_book_by_title("some book")
 
     assert Enum.count(Books.list_authors) == 2
     assert Enum.count(Books.list_books) == 2
