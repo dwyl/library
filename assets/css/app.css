@@ -1,1 +1,44 @@
 /* This file is for your main application css. */
+.dwyl-teal{
+  color: #4ABDAC;
+}
+
+.bg-dwyl-teal{
+  background-color: #4ABDAC;
+}
+
+.w3-5{
+  width: 3.5rem;
+}
+
+.dark-grey{
+  color: #4D4D4D;
+}
+
+.medium-grey{
+  color: #626262;
+}
+
+.light-grey{
+  color: #EBEBEB;
+}
+
+.f-dark-grey{
+  fill: #4D4D4D;
+}
+
+.bg-light-grey{
+  background-color: #EBEBEB;
+}
+
+.bs-bb{
+  box-sizing: border-box;
+}
+
+.fg1{
+  flex-grow: 1;
+}
+
+.focus-light-grey:focus{
+  background-color: #f4f4f4;
+}
