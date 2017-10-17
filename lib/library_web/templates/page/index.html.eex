@@ -10,5 +10,5 @@
 </div>
 <h2 class="f5 fw3 dwyl-teal pl3 mt3 mb2">In the dwyl library</h2>
 <div class="ph2">
-  <%= component("book", conn: @conn, book: %{title: "Programming Phoenix", author_list: ["Chris McCord", "Bruce Tate", "Jose Valim"], thumbnail: "/images/phoenix.png"}) %>
+  <%= component("book", conn: @conn, book: %{title: "Programming Phoenix", author_list: ["Chris McCord", "Bruce Tate", "Jose Valim"], thumbnail_small: "/images/phoenix.png"}) %>
 </div>

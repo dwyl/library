@@ -11,6 +11,21 @@
   width: 3.5rem;
 }
 
+.mw3-5{
+  max-width: 4.2rem;
+  min-width: 4.2rem;
+}
+
+.h-image{
+  max-height: 3.7rem;
+  min-height: 3.7rem;
+}
+
+.w-image{
+  max-width: 2.5rem;
+  min-width: 2.5rem;
+}
+
 .dark-grey{
   color: #4D4D4D;
 }

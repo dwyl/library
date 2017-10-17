@@ -20,9 +20,6 @@ defmodule Library.GoogleBooks do
       |> handle_google_api_response
   end
 
-  @doc """
-
-  """
   defp handle_google_api_response(result) do
     case result do
       {:ok, result} ->
@@ -34,6 +31,8 @@ defmodule Library.GoogleBooks do
         error
     end
   end
+
+  def handle_api_decode({:ok, %{"totalItems" => 0}}), do: []
 
   def handle_api_decode(result) do
     case result do
@@ -49,19 +48,19 @@ defmodule Library.GoogleBooks do
           |> case do
             {:ok, map} ->
               acc ++ [map]
-            {:error, error} ->
+            {:error, _error} ->
               acc
           end
         end)
       {:error, error} ->
-        error # TODO: do something proper with this error
+        error
     end
   end
 
   defp validate_required(%{title: _title,
                           author_list: _authors,
                           owned: _owned} = map), do: {:ok, map}
-  defp validate_required(map), do: {:error, "Missing valid property"}
+  defp validate_required(_map), do: {:error, "Missing valid property"}
 
   defp get_isbns(%{"industryIdentifiers" => identifiers} = map) do
     Enum.reduce(identifiers, %{}, fn %{"identifier" => isbn, "type" => type}, acc ->
