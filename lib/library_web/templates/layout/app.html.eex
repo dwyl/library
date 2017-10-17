@@ -13,14 +13,12 @@
   </head>
 
   <body class="bg-light-grey">
-    <div class="h3 pb1 pt2">
-      <img src="/images/dwyl-heart-only-logo-white.png" class="w3-5 mt1 db center"/>
-    </div>
+    <div class="h3 pb1 pt2"></div>
     <nav class="h3 pb1 pt2 fixed w-100 bg-dwyl-teal top-0">
-      <img src="/images/dwyl-heart-only-logo-white.png" class="w3-5 mt1 db center"/>
+      <%= img_tag(static_path(@conn, "/images/dwyl-heart-only-logo-white.png"), class: "w3-5 mt1 db center") %>
       <div class="right-0 top-0 absolute pt3">
-        <a href="/search" class="link db white fr f5 mr3 mt1 mb1">Search</a>
-        <a href="/feedback class" class="link db white right f5 mr3">Feedback</a>
+        <%= link("Search", to: page_path(@conn, :index), class: "link db white fr f5 mr3 mt1 mb1") %>
+        <%= link("Feedback", to: page_path(@conn, :index), class: "link db white right f5 mr3") %>
       </div>
     </nav>
 
@@ -28,8 +26,8 @@
       <%= render @view_module, @view_template, assigns %>
     </main>
 
-    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <div role="alert"><%= get_flash(@conn, :info) %></div>
+    <div role="alert"><%= get_flash(@conn, :error) %></div>
 
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>

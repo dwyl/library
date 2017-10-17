@@ -1,5 +1,5 @@
 <div class="w-100 db v-top mb2 pa3 bs-bb bg-white link dark-grey flex">
-  <img src="<%= assigns.book.thumbnail %>" alt="Programming Phoenix cover" class="w3-5 pt1 h-100 shadow-4 mr3 dib" />
+  <%= img_tag(assigns.book.thumbnail, alt: "#{assigns.book.title} cover image", class: "w3-5 pt1 h-100 shadow-4 mr3 dib") %>
   <h2 class="f6 dib v-top ma0 fg1 lh-copy">
     <%= assigns.book.title %><br/>
     <span class="f6 v-top medium-grey ma0 fw3">
@@ -7,7 +7,7 @@
     </span>
   </h2>
   <div class="ml3 w4 pt1">
-    <a class="f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal">Request</a>
-    <a class="f6 w-100 tc ba link dim pv1 mb2 dib dwyl-teal">More info</a>
+    <%= link("Request", to: page_path(assigns.conn, :index), class: "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal") %>
+    <%= link("More info", to: page_path(assigns.conn, :index), class: "f6 w-100 tc ba link dim pv1 mb2 dib dwyl-teal") %>
   </div>
 </div>
