@@ -24,7 +24,7 @@ defmodule LibraryWeb.Router do
 
     get "/", AdminController, :index
     get "/search", AdminController, :search
-    get "/create", AdminController, :create
+    post "/create", AdminController, :create
   end
 
   # Other scopes may use custom stacks.

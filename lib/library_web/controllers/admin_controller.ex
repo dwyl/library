@@ -12,4 +12,20 @@ defmodule LibraryWeb.AdminController do
 
     render(conn, "index.html", books: books)
   end
+
+  def create(conn, %{"author_list" => authors} = params) do
+      params
+      |> Map.put("author_list", String.split(authors, ";"))
+      |> Library.Books.create_book_authors!
+      |> case do
+        false ->
+          conn
+          |> put_flash(:info, "Book not added, already in library")
+        _ ->
+          conn
+          |> put_flash(:info, "Book added")
+      end
+      |> render("index.html", books: [])
+
+  end
 end
