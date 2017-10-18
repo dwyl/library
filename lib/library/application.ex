@@ -6,7 +6,7 @@ defmodule Library.Application do
   def start(_type, _args) do
     import Supervisor.Spec
 
-    unless Mix.env == :prod do
+    unless Mix.env == :prod || Mix.env == :test do
       Envy.load(["config.env"])
       Envy.reload_config()
     end

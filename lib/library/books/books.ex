@@ -43,13 +43,36 @@ defmodule Library.Books do
   Gives nil if no book with that title exists
 
   ## Examples
-  iex> get_book_by_title("harry potter")
+  iex> get_book_by_title!("harry potter")
   %Book{}
 
-  iex> get_book_by_title("not a title")
-  nil
+  iex> get_book_by_title!("not a title")
+  Error
 """
-  def get_book_by_title(title), do: Repo.get_by!(Book, title: title)
+  def get_book_by_title!(title), do: Repo.get_by!(Book, title: title)
+
+  def get_books_by_title_and_authors(%{"title" => title, "author_list" => author_list}), do: get_books_by_title_and_authors(title, author_list)
+
+  def get_books_by_title_and_authors(%{title: title, author_list: author_list}), do: get_books_by_title_and_authors(title, author_list)
+
+  def get_books_by_title_and_authors(title, author_list) do
+    query = from b in "books",
+            where: b.title == ^title,
+            where: b.author_list == ^author_list,
+            select: b.title
+
+
+    Repo.all(query)
+  end
+
+  def book_exists?(book) do
+    case get_books_by_title_and_authors(book) do
+      [] ->
+        false
+      _ ->
+        true
+    end
+  end
 
   @doc """
   Updates a book to be owned.
@@ -80,11 +103,15 @@ defmodule Library.Books do
   will roll back.
   """
   def create_book_authors!(attrs \\ %{}) do
-    Repo.transaction fn ->
-      attrs
-      |> create_book!()
-      |> Repo.preload(:author)
-      |> create_authors_for_book!()
+    unless book_exists?(attrs) do
+      Repo.transaction fn ->
+        attrs
+        |> create_book!()
+        |> Repo.preload(:author)
+        |> create_authors_for_book!()
+      end
+    else
+      false
     end
   end
 

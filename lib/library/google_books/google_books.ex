@@ -1,5 +1,4 @@
 defmodule Library.GoogleBooks do
-  @book_api_url "https://www.googleapis.com/books/v1/volumes?key=#{System.get_env "GOOGLE_BOOKS_KEY"}&q="
   @desired_info ["title", "authors", "publishedDate", "printType", "categories", ["imageLinks", "thumbnail"], ["imageLinks", "smallThumbnail"], "language", "previewLink", "industryIdentifiers"]
   @keys_to_rename [{"title", :title}, {"authors", :author_list},
                    {"publishedDate", :date_published}, {"printType", :type},
@@ -37,7 +36,8 @@ defmodule Library.GoogleBooks do
   def handle_api_decode(result) do
     case result do
       {:ok, map} ->
-        Map.get(map, "items")
+        map
+        |> Map.get("items")
         |> Enum.reduce([], fn (%{"volumeInfo" => map}, acc) ->
           map
           |> get_values_from_map(@desired_info)
@@ -73,8 +73,11 @@ defmodule Library.GoogleBooks do
   defp get_isbns(map), do: map
 
   def create_url(search_query, search_category) do
+    key = System.get_env "GOOGLE_BOOKS_KEY"
+    url = "https://www.googleapis.com/books/v1/volumes?key=#{key}&q="
+
     query = URI.encode(search_query)
-    @book_api_url <> case search_category do
+    url <> case search_category do
       "title" ->
         "intitle:" <> query
       "isbn" ->
