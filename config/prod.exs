@@ -16,17 +16,13 @@ use Mix.Config
 config :library, LibraryWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [scheme: "https", host: "dwyl-library.herokuapp.com", port: 443],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
+
 
 # Do not print debug messages in production
 config :logger, level: :info
-
-config :tudo, Tudo.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-  ssl: true
 
 # ## SSL Support
 #
