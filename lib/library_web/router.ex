@@ -19,6 +19,14 @@ defmodule LibraryWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/admin", LibraryWeb do
+    pipe_through :browser
+
+    get "/", AdminController, :index
+    get "/search", AdminController, :search
+    get "/create", AdminController, :create
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", LibraryWeb do
   #   pipe_through :api

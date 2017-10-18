@@ -47,6 +47,17 @@ The embryonic first iteration of the application will allow dwylers to carry out
   they can easily be added
 + Check in the book when it is returned
   + This should include adding the answer to two short questions as a review
++ Favourite the book
 
+## Running the Library locally
+To run the Library locally clone the repo, install the node modules, initialise
+the database and finally start the server:
 
-  + Favourite the book
+```shell
+git clone https://github.com/dwyl/library.git
+cd library/assets && npm i && cd ..
+mix do ecto.create, ecto.migrate, phx.server
+```
+
+If the above commands don't work, make sure you have Phoenix 1.3 and Postgres
+installed on your machine.

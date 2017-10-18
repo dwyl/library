@@ -278,7 +278,6 @@ defmodule Library.BooksTest do
 
     @valid_attrs %{queue: [1, 2, 3], book_id: 1, user_id: 1}
     @update_attrs %{queue: [1, 2, 3, 4]}
-    @invalid_attrs %{queue: nil, book_id: 1, user_id: 1}
 
     def book_and_user_fixture do
       book = Books.create_book!(%{title: "A book", author_list: ["An Author"]})

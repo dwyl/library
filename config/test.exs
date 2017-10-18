@@ -17,3 +17,5 @@ config :library, Library.Repo,
   database: "library_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :library, :httpoison, Library.HTTPoison.InMemory
