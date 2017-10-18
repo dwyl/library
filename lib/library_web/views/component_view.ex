@@ -7,5 +7,8 @@ defmodule LibraryWeb.ComponentView do
     |> Map.delete(:category)
     |> URI.encode_query()
   end
-  
+
+  def get_thumbnail(book, conn) do
+    Map.get(book, :thumbnail_small) || static_path(conn, "/images/null-image.png")
+  end
 end
