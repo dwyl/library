@@ -43,17 +43,14 @@ defmodule Library.Users do
   Returns {:ok, %User{}} if user does exist, and {:error, "user does not exist"}
   if they do not.
 
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
   """
   def get_user(id), do: Repo.get(User, id)
 
+
+
+  def get_user_by_username(username) do
+    Repo.get_by(User, username: username)
+  end
 
   @doc """
   Creates a user.

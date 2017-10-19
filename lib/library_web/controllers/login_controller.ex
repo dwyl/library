@@ -45,7 +45,7 @@ defmodule LibraryWeb.LoginController do
   defp add_user(%{"name" => first_name, "organizations_url" => org_url, "login" => username, "access_token" => token}) do
     case get_orgs_and_email(org_url, token) do
       {:ok, %{"orgs" => orgs, "email" => email}} ->
-        Library.Users.create_user(
+        insert_or_update_user(
           %{
             email: email,
             first_name: first_name,
@@ -120,6 +120,15 @@ defmodule LibraryWeb.LoginController do
       {:error, reason} ->
         IO.inspect(reason)
         {:error, "problem getting emails"}
+    end
+  end
+
+  def insert_or_update_user(%{username: username} = user) do
+    case Library.Users.get_user_by_username(username) do
+      nil ->
+        Library.Users.create_user(user)
+      old_user ->
+        Library.Users.update_user(old_user, user)
     end
   end
 
