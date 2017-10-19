@@ -3,6 +3,8 @@ defmodule LibraryWeb.AdminController do
 
   alias Library.GoogleBooks
 
+  plug LibraryWeb.Plugs.RequireAdmin
+
   def index(conn, _params) do
     render conn, "index.html", books: []
   end

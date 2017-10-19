@@ -38,6 +38,24 @@ defmodule Library.Users do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Gets a single user.
+
+  Returns {:ok, %User{}} if user does exist, and {:error, "user does not exist"}
+  if they do not.
+
+  ## Examples
+
+      iex> get_user!(123)
+      %User{}
+
+      iex> get_user!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user(id), do: Repo.get(User, id)
+
+
+  @doc """
   Creates a user.
 
   ## Examples

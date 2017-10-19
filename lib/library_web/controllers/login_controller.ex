@@ -2,6 +2,7 @@ defmodule LibraryWeb.LoginController do
   use LibraryWeb, :controller
 
   def index(conn, _params) do
+    IO.inspect(conn.assigns[:user])
     render conn, "index.html"
   end
 
@@ -30,6 +31,7 @@ defmodule LibraryWeb.LoginController do
               IO.inspect(user)
               conn
               |> put_flash(:info, "added to db succesfully")
+              |> put_session(:user_id, user.id)
               |> render("index.html")
             error ->
               IO.inspect(error)
