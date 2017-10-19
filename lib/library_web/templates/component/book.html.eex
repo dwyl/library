@@ -9,7 +9,7 @@
     </span>
   </h2>
   <div class="ml3 w4 mw3-5 pt1">
-    <%= link("Add book", to: admin_path(assigns.conn, :create) <> "?" <> create_query_string(assigns.book), class: "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal", method: :post)%>
+    <%= link(get_button_text(assigns.book, assigns.conn), get_button_options(assigns.book, assigns.conn)) %>
     <%= link("More info", to: page_path(assigns.conn, :index), class: "f6 w-100 tc ba link dim pv1 mb2 dib dwyl-teal") %>
   </div>
 </div>

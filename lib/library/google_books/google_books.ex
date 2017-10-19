@@ -44,6 +44,7 @@ defmodule Library.GoogleBooks do
           |> get_isbns
           |> rename_keys(@keys_to_rename)
           |> Map.put(:owned, false)
+          |> Map.put(:web, true)
           |> validate_required
           |> case do
             {:ok, map} ->
