@@ -19,8 +19,33 @@ defmodule Library.Books do
 
   """
   def list_books do
-    Repo.all(Book)
+    query = from b in Book,
+            preload: [:request, :book_loan]
+    Repo.all(query)
   end
+
+  @doc """
+  Returns a list of books filtered by author and title or by exact isbn
+  """
+  def search_books(author, isbn, title) do
+    query =
+      unless (isbn == "") do
+        from b in Book,
+        where: b.isbn_13 == ^isbn,
+        or_where: b.isbn_10 == ^isbn,
+        or_where: ^isbn == ""
+      else
+        from b in Book,
+        preload: [:request, :book_loan],
+        where: ilike(b.title, ^"%#{title}%"),
+        join: a in assoc(b, :author),
+        where: ilike(a.author, ^"%#{author}%")
+      end
+
+    Repo.all(query)
+  end
+
+
 
   @doc """
   Gets a single book.
