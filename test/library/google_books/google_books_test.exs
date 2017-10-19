@@ -58,7 +58,7 @@ defmodule Library.GoogleBooksTest do
   end
 
   test "google_books_search does a search" do
-    result = %{author_list: ["hemingway"], owned: false, title: "hello world"}
+    result = %{author_list: ["hemingway"], owned: false, title: "hello world", web: true}
     assert GoogleBooks.google_books_search("harry potter", "title") ==
       [result]
 
