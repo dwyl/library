@@ -9,7 +9,7 @@ defmodule LibraryWeb.PageController do
     render conn, "index.html", books: books, web: false
   end
 
-  def search(conn, %{"search" => %{"author" => author, "isbn" => isbn, "title" => title}, "web" => web}) do
+  def search(conn, %{"search" => %{"author" => _author, "isbn" => _isbn, "title" => title}, "web" => _web}) do
     books = GoogleBooks.google_books_search(title, "title")
 
     render(conn, "index.html", books: books, web: "web")

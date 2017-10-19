@@ -11,4 +11,13 @@ defmodule LibraryWeb.PageView do
         "No results found, showing results from the web"
     end
   end
+
+  def search_the_web_url(conn) do
+    web = Map.get(conn.query_params, :web) || "&web=true"
+
+    page_path(conn, :search) <>
+    "?" <>
+    conn.query_string <>
+    web
+  end
 end
