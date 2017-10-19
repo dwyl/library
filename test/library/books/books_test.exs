@@ -50,9 +50,30 @@ defmodule Library.BooksTest do
         |> Books.create_book!()
     end
 
+    def book_authors_fixture(attrs \\ %{}) do
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Books.create_book_authors!()
+    end
+
     test "list_books/0 returns all books" do
-      book = book_fixture()
+      book =
+        book_fixture()
+        |> Map.put(:book_loan, nil)
+        |> Map.put(:request, [])
+
       assert Books.list_books() == [book]
+    end
+
+    test "search_books/3 searches for books based on title, author and isbn" do
+      book_authors_fixture()
+      book_authors_fixture(%{title: "some book2", author_list: ["JK Bowling"], isbn_13: "123"})
+      book_authors_fixture(%{title: "some book3", author_list: ["JK Rowling"]})
+
+      assert Enum.count(Books.search_books("", "", "some")) == 3
+      assert Enum.count(Books.search_books("jk rowling", "", "book3")) == 1
+      assert Enum.count(Books.search_books("jk", "", "book")) == 2
+      assert Enum.count(Books.search_books("", "123", "")) == 1
     end
 
     test "get_book!/1 returns the book with given id" do
