@@ -27,6 +27,13 @@ defmodule LibraryWeb.Router do
     post "/create", AdminController, :create
   end
 
+  scope "/login", LibraryWeb do
+    pipe_through :browser
+
+    get "/", LoginController, :index
+    get "/github", LoginController, :login
+    get "/github-callback", LoginController, :callback
+  end
   # Other scopes may use custom stacks.
   # scope "/api", LibraryWeb do
   #   pipe_through :api
