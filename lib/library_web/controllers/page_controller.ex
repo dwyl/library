@@ -6,7 +6,7 @@ defmodule LibraryWeb.PageController do
   def index(conn, _params) do
     books = list_books()
 
-    render conn, "index.html", books: books, web: false
+    render(conn, "index.html", books: books, web: false)
   end
 
   def search(conn, %{"search" => %{"author" => _author, "isbn" => _isbn, "title" => title}, "web" => _web}) do

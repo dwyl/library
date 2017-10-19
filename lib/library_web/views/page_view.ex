@@ -13,7 +13,7 @@ defmodule LibraryWeb.PageView do
   end
 
   def search_the_web_url(conn) do
-    web = Map.get(conn.query_params, :web) || "&web=true"
+    web = (Map.get(conn.query_params, :web) && "") || "&web=true"
 
     page_path(conn, :search) <>
     "?" <>
