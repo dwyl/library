@@ -55,7 +55,9 @@ the database and finally start the server:
 
 ```shell
 git clone https://github.com/dwyl/library.git
-cd library/assets && npm i && cd ..
+cd library
+mix deps.get
+cd assets && npm i && cd ..
 mix do ecto.create, ecto.migrate, phx.server
 ```
 
