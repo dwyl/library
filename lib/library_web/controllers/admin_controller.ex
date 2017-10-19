@@ -8,9 +8,7 @@ defmodule LibraryWeb.AdminController do
   end
 
   def search(conn, %{"search" => %{"query" => query}}) do
-    books =
-      query
-      |> GoogleBooks.google_books_search("title")
+    books = GoogleBooks.google_books_search(query, "title")
 
     render(conn, "index.html", books: books)
   end

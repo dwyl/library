@@ -12,8 +12,8 @@ defmodule LibraryWeb.ComponentView do
     Map.get(book, :thumbnail_small) || static_path(conn, "/images/null-image.png")
   end
 
-  def admin?(conn) do
-    case get_user(conn) do
+  def admin?(user) do
+    case user do
       nil -> nil
       user -> Map.get(user, :is_admin)
     end
@@ -21,12 +21,11 @@ defmodule LibraryWeb.ComponentView do
 
   def get_user(conn) do
     Map.get(conn.assigns, :user)
-    %{id: 1, is_admin: 1}
   end
 
   def get_button_text(book, conn) do
     user = get_user(conn)
-    admin = admin?(conn)
+    admin = admin?(user)
     web = Map.get(book, :web)
     request = Map.get(book, :request)
     owned = Map.get(book, :owned)
@@ -39,16 +38,16 @@ defmodule LibraryWeb.ComponentView do
         "Check in"
       loan ->
         "Join queue"
-      owned ->
-        "Check out"
       owned && admin ->
         "Remove"
+      owned ->
+        "Check out"
       !owned && web && admin ->
         "Add book"
-      web && request && Enum.count(request) == 0 ->
-        "Request"
       web && request && Enum.count(request) > 0 ->
         "Requested"
+      web ->
+        "Request"
       true ->
         "n/a"
     end
