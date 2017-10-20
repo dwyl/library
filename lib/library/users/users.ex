@@ -47,7 +47,15 @@ defmodule Library.Users do
   def get_user(id), do: Repo.get(User, id)
 
 
+  @doc """
+    Gets a single user from the database by username.
 
+    ## Examples
+    iex>get_user_by_username "username that exists in db"
+    %User{}
+    iex>get_user_by_username "username that doesn't exist in db"
+    nil
+  """
   def get_user_by_username(username) do
     Repo.get_by(User, username: username)
   end
@@ -115,5 +123,25 @@ defmodule Library.Users do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+  @doc """
+    Checks by username if the user is in the database, and updates them if they
+    are, and inserts them if not.
+
+    ## Examples
+
+        iex> insert_or_update_user(user_info)
+        {:ok, %User{}}
+
+        iex> insert_or_update_user(invalid_user_info)
+        {:error, %Ecto.Changeset{}}
+  """
+  def insert_or_update_user(%{username: username} = user) do
+    case Library.Users.get_user_by_username(username) do
+      nil ->
+        Library.Users.create_user(user)
+      old_user ->
+        Library.Users.update_user(old_user, user)
+    end
   end
 end

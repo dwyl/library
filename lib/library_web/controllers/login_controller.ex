@@ -1,22 +1,48 @@
 defmodule LibraryWeb.LoginController do
   use LibraryWeb, :controller
+  alias Library.Users
   @elixir_auth_github Application.get_env(:library, :elixir_auth_github) || ElixirAuthGithub
 
   @httpoison Application.get_env(:library, :httpoison) || HTTPoison
+
+  @doc """
+    Just shows the user the plain index.html
+  """
   def index(conn, _params) do
     render conn, "index.html"
   end
 
+
+  @doc """
+    Creates a github URL with the scope for getting the user's email and orgs
+    renders the index.html if there is a failure constructing it (can only
+    happen when elixir_auth_github is not configured correctly/env variables
+    are not set), and redirects to github login if the url is correct
+  """
   def login(conn, _params) do
 
     case @elixir_auth_github.login_url_with_scope(["user:email", "read:org"]) do
       {:err, reason} ->
         # TODO: set internal server error
+        conn = conn
+              |> put_flash(:error, "Something went wrong on our end, try again later!")
+
         render conn, "index.html"
       {:ok, url} ->
         redirect conn, external: url
     end
   end
+
+  @doc """
+    This is the route which will be called after the user has authenticated on
+    github, it takes the code from github, and then ElixirAuthGithub goes and
+    gets the user's details. If there's an error, we send the user to the index
+    page, with an error message, if it's succesful, we proceed to get their
+    email and organisations in separate requests to the github api, and then
+    check if they're a member of dwyl. If all of this happens without a hitch,
+    we insert them into the database (or update their entry, if they're already in there). If there's any errors along the way then we redirect the user to
+    the index page with a message about what went wrong.
+  """
 
   def callback(conn, %{"code" => code}) do
     case @elixir_auth_github.github_auth(code) do
@@ -50,7 +76,7 @@ defmodule LibraryWeb.LoginController do
     case get_orgs_and_email(token) do
       {:ok, %{"orgs" => orgs, "email" => email}} ->
         if is_member_of_dwyl?(orgs) do
-          insert_or_update_user(
+          Users.insert_or_update_user(
           %{
             email: email,
             first_name: first_name,
@@ -67,7 +93,7 @@ defmodule LibraryWeb.LoginController do
     end
   end
 
-  def get_orgs_and_email(token) do
+  defp get_orgs_and_email(token) do
     case get_orgs(token) do
       {:ok, orgs} ->
         case get_primary_email(token) do
@@ -81,7 +107,7 @@ defmodule LibraryWeb.LoginController do
     end
   end
 
-  def get_orgs(token) do
+  defp get_orgs(token) do
     case @httpoison.get("https://api.github.com/user/orgs", [{"Accept", "application/json"}, {"Authorization", "token #{token}"}]) do
       {:ok, res} ->
         res.body
@@ -105,11 +131,11 @@ defmodule LibraryWeb.LoginController do
     end
   end
 
-  def is_member_of_dwyl?(orgs) do
+  defp is_member_of_dwyl?(orgs) do
     Enum.any? orgs, fn org -> org == "dwyl" end
   end
 
-  def get_primary_email(token) do
+  defp get_primary_email(token) do
     case @httpoison.get("https://api.github.com/user/emails", [{"Accept", "application/json"}, {"Authorization", "token #{token}"}]) do
       {:ok, res} ->
         res.body
@@ -130,24 +156,4 @@ defmodule LibraryWeb.LoginController do
         {:error, "problem getting emails"}
     end
   end
-
-  def insert_or_update_user(%{username: username} = user) do
-    case Library.Users.get_user_by_username(username) do
-      nil ->
-        Library.Users.create_user(user)
-      old_user ->
-        Library.Users.update_user(old_user, user)
-    end
-  end
-
-  # TODO:
-  # set up route for redirect for user to log in DONE
-  # use the github callback thing DONE
-  # put user in database DONE
-  # set session with user information
-  # create plug for requiring auth
-  # protect routes so that only logged in users can view them
-  # create plug for requiring user to be an admin
-  # protect routes so that only admins can view them
-  #
 end
