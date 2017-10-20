@@ -29,15 +29,22 @@ defmodule LibraryWeb.LoginController do
         case add_user(user) do
             {:ok, user} ->
               IO.inspect(user)
-              conn
-              |> put_flash(:info, "added to db succesfully")
-              |> put_session(:user_id, user.id)
-              |> render("index.html")
+              conn = conn
+                    |> put_flash(:info, "added to db succesfully")
+                    |> put_session(:user_id, user.id)
+              redirect(conn, to: page_path(conn, :index))
+            {:error, "not a dwyl member"} ->
+              conn = conn
+                     |> put_flash(:error, "Sorry, the library can only be used by members of dwyl!")
+
+              redirect(conn, to: page_path(conn, :index))
             error ->
               IO.inspect(error)
-              conn
-              |> put_flash(:error, "Problem adding user, sorry, try again later!")
-              |> render("index.html")
+              conn = conn
+                     |> put_flash(:error, "Problem adding user, sorry, try again later!")
+
+              redirect(conn, to: page_path(conn, :index))
+
         end
     end
   end
@@ -45,15 +52,19 @@ defmodule LibraryWeb.LoginController do
   defp add_user(%{"name" => first_name, "organizations_url" => org_url, "login" => username, "access_token" => token}) do
     case get_orgs_and_email(org_url, token) do
       {:ok, %{"orgs" => orgs, "email" => email}} ->
-        insert_or_update_user(
+        if is_member_of_dwyl?(orgs) do
+          insert_or_update_user(
           %{
             email: email,
             first_name: first_name,
-            orgs: orgs,
+            orgs: [],
             username: username,
             is_admin: false
           }
-        )
+          )
+        else
+          {:error, "not a dwyl member"}
+        end
         # TODO: check if user exists in database, if they do, get them out, if
         # they don't, add them
       _error ->
@@ -98,6 +109,10 @@ defmodule LibraryWeb.LoginController do
         IO.inspect reason
         {:error, "problem getting orgs"}
     end
+  end
+
+  def is_member_of_dwyl?(orgs) do
+    Enum.any? orgs, fn org -> org == "dwyl" end
   end
 
   def get_primary_email(token) do
