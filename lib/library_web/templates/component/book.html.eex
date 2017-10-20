@@ -7,6 +7,12 @@
     <span class="f6 v-top medium-grey ma0 fw3">
       <%= Enum.join assigns.book.author_list, ", " %>
     </span>
+    <%= if !Map.get(assigns.book, :web) && Map.get(@conn.assigns, :web) do %>
+      <br/>
+      <span class="dwyl-teal fw3">
+        In the library
+      </span>
+    <% end %>
   </h2>
   <div class="ml3 w4 mw3-5 pt1">
     <%= link(get_button_text(assigns.book, assigns.conn), get_button_options(assigns.book, assigns.conn)) %>
