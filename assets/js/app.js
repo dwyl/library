@@ -13,6 +13,23 @@
 // to also remove its path from "config.paths.watched".
 import "phoenix_html"
 
+var toFilter = [].slice.call(document.getElementsByClassName('filters'));
+var filter = document.getElementById('filter_button')
+
+toFilter.forEach(function (element) {
+  element.className += " sr-only";
+})
+filter.addEventListener('click', function (e) {
+    e.preventDefault();
+    toFilter.forEach(function (element) {
+      if (element.className.includes("sr-only")) {
+        element.className = element.className.replace(" sr-only", "");
+      } else {
+        element.className += " sr-only";
+      }
+    })
+  });
+
 // Import local files
 //
 // Local files can be imported directly using relative

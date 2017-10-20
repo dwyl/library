@@ -8,7 +8,12 @@
     "lib/library_web.ex",
     "test/support",
     "lib/library_web/router.ex",
-    "lib/library_web/views",
+    "lib/library_web/views/admin_view.ex",
+    "lib/library_web/views/component_helpers.ex",
+    "lib/library_web/views/error_helpers.ex",
+    "lib/library_web/views/layout_view.ex",
+    "lib/library_web/views/error_view.ex",
+    "lib/library_web/views/page_view.ex",
     "lib/library/application.ex",
     "lib/library_web/endpoint.ex",
     "lib/library_web/controllers/plugs/require_auth.ex"

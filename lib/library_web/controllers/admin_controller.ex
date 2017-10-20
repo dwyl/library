@@ -6,7 +6,7 @@ defmodule LibraryWeb.AdminController do
   plug LibraryWeb.Plugs.RequireAdmin
 
   def index(conn, _params) do
-    render conn, "index.html", books: []
+    render(conn, "index.html", books: [])
   end
 
   def search(conn, %{"search" => %{"query" => query}}) do
