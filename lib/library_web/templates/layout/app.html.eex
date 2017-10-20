@@ -13,12 +13,13 @@
   </head>
 
   <body class="bg-light-grey">
+    <a id="search"></a>
     <div class="h3 pb1 pt2"></div>
     <nav class="h3 pb1 pt2 fixed w-100 bg-dwyl-teal top-0">
-      <%= img_tag(static_path(@conn, "/images/dwyl-heart-only-logo-white.png"), class: "w3-5 mt1 db center") %>
+      <%=  img_tag(static_path(@conn, "/images/dwyl-heart-only-logo-white.png"), class: "w3-5 mt1 db center") |> link(to: page_path(@conn, :index)) %>
       <div class="right-0 top-0 absolute pt3">
-        <%= link("Search", to: page_path(@conn, :index), class: "link db white fr f5 mr3 mt1 mb1") %>
-        <%= link("Feedback", to: page_path(@conn, :index), class: "link db white right f5 mr3") %>
+        <%= link("Search", to: "#search", class: "link db white fr f5 mr3 mt1 mb1") %>
+        <%= link("Feedback", to: "https://www.github.com/dwyl/library/issues", class: "link db white right f5 mr3") %>
       </div>
     </nav>
 
