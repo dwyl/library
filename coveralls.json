@@ -10,6 +10,7 @@
     "lib/library_web/router.ex",
     "lib/library_web/views",
     "lib/library/application.ex",
-    "lib/library_web/endpoint.ex"
+    "lib/library_web/endpoint.ex",
+    "lib/library_web/controllers/plugs/require_auth.ex"
   ]
 }

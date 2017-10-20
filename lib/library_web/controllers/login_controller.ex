@@ -1,16 +1,17 @@
 defmodule LibraryWeb.LoginController do
   use LibraryWeb, :controller
+  @elixir_auth_github Application.get_env(:library, :elixir_auth_github) || ElixirAuthGithub
 
+  @httpoison Application.get_env(:library, :httpoison) || HTTPoison
   def index(conn, _params) do
-    IO.inspect(conn.assigns[:user])
     render conn, "index.html"
   end
 
   def login(conn, _params) do
 
-    case ElixirAuthGithub.login_url_with_scope(["user:email", "read:org"]) do
+    case @elixir_auth_github.login_url_with_scope(["user:email", "read:org"]) do
       {:err, reason} ->
-        IO.inspect(reason)
+        # TODO: set internal server error
         render conn, "index.html"
       {:ok, url} ->
         redirect conn, external: url
@@ -18,17 +19,14 @@ defmodule LibraryWeb.LoginController do
   end
 
   def callback(conn, %{"code" => code}) do
-    case ElixirAuthGithub.github_auth(code) do
+    case @elixir_auth_github.github_auth(code) do
       {:error, error} ->
-        IO.inspect(error)
         conn
         |> put_flash(:error, "Problem getting info from github, try again later")
         |> render("index.html")
       {:ok, user} ->
-        IO.inspect(user)
         case add_user(user) do
             {:ok, user} ->
-              IO.inspect(user)
               conn = conn
                     |> put_flash(:info, "added to db succesfully")
                     |> put_session(:user_id, user.id)
@@ -39,7 +37,6 @@ defmodule LibraryWeb.LoginController do
 
               redirect(conn, to: page_path(conn, :index))
             error ->
-              IO.inspect(error)
               conn = conn
                      |> put_flash(:error, "Problem adding user, sorry, try again later!")
 
@@ -49,8 +46,8 @@ defmodule LibraryWeb.LoginController do
     end
   end
 
-  defp add_user(%{"name" => first_name, "organizations_url" => org_url, "login" => username, "access_token" => token}) do
-    case get_orgs_and_email(org_url, token) do
+  defp add_user(%{"name" => first_name, "login" => username, "access_token" => token}) do
+    case get_orgs_and_email(token) do
       {:ok, %{"orgs" => orgs, "email" => email}} ->
         if is_member_of_dwyl?(orgs) do
           insert_or_update_user(
@@ -65,15 +62,13 @@ defmodule LibraryWeb.LoginController do
         else
           {:error, "not a dwyl member"}
         end
-        # TODO: check if user exists in database, if they do, get them out, if
-        # they don't, add them
       _error ->
         {:error, "problem getting info from github"}
     end
   end
 
-  def get_orgs_and_email(org_url, token) do
-    case get_orgs(org_url, token) do
+  def get_orgs_and_email(token) do
+    case get_orgs(token) do
       {:ok, orgs} ->
         case get_primary_email(token) do
           {:ok, email} ->
@@ -86,8 +81,8 @@ defmodule LibraryWeb.LoginController do
     end
   end
 
-  def get_orgs(org_url, token) do
-    case HTTPoison.get(org_url, [{"Accept", "application/json"}, {"Authorization", "token #{token}"}]) do
+  def get_orgs(token) do
+    case @httpoison.get("https://api.github.com/user/orgs", [{"Accept", "application/json"}, {"Authorization", "token #{token}"}]) do
       {:ok, res} ->
         res.body
         |> Poison.decode
@@ -106,7 +101,6 @@ defmodule LibraryWeb.LoginController do
             error
         end
       {:error, reason} ->
-        IO.inspect reason
         {:error, "problem getting orgs"}
     end
   end
@@ -116,7 +110,7 @@ defmodule LibraryWeb.LoginController do
   end
 
   def get_primary_email(token) do
-    case HTTPoison.get("https://api.github.com/user/emails", [{"Accept", "application/json"}, {"Authorization", "token #{token}"}]) do
+    case @httpoison.get("https://api.github.com/user/emails", [{"Accept", "application/json"}, {"Authorization", "token #{token}"}]) do
       {:ok, res} ->
         res.body
         |> Poison.decode
@@ -133,7 +127,6 @@ defmodule LibraryWeb.LoginController do
             error
         end
       {:error, reason} ->
-        IO.inspect(reason)
         {:error, "problem getting emails"}
     end
   end

@@ -7,7 +7,7 @@ defmodule LibraryWeb.Plugs.RequireAdmin do
   end
 
   def call(conn, _params) do
-    if conn.assigns[:user].is_admin === true do
+    if conn.assigns[:user] && conn.assigns[:user].is_admin === true do
       conn
     else
       conn
