@@ -27,4 +27,32 @@ defmodule LibraryWeb.PageController do
 
     render(conn, "index.html", books: books, web: web)
   end
+
+  def show(conn, %{"id" => id} = _params) do
+    render(conn, "index.html", books: [get_book!(id)], web: false)
+  end
+
+  def checkout(conn, %{"id" => id} = _params) do
+    case checkout_book(id, conn.assigns.user.id) do
+      {:ok, _book_loan} ->
+        conn
+        |> put_flash(:info, "Book checked out.")
+      _ ->
+        conn
+        |> put_flash(:error, "Error checking book out.")
+    end
+    |> redirect(to: page_path(conn, :show, id))
+  end
+
+  def checkin(conn, %{"id" => id} = _params) do
+    case checkin_book(id, conn.assigns.user.id) do
+      {:ok, _book_loan} ->
+        conn
+        |> put_flash(:info, "Book checked in.")
+      _ ->
+        conn
+        |> put_flash(:error, "Error checking book in.")
+    end
+    |> redirect(to: page_path(conn, :show, id))
+  end
 end

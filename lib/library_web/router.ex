@@ -18,6 +18,9 @@ defmodule LibraryWeb.Router do
 
     get "/", PageController, :index
     get "/search", PageController, :search
+    get "/checkout/:id", PageController, :checkout
+    get "/checkin/:id", PageController, :checkin
+    get "/show/:id", PageController, :show
   end
 
   scope "/admin", LibraryWeb do

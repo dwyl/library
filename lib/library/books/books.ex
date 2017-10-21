@@ -6,8 +6,67 @@ defmodule Library.Books do
   import Ecto.Query, warn: false
   alias Library.Repo
 
-  alias Library.Books.Book
-  alias Library.Books.Author
+  alias Library.Books.{Book, Author, BookLoan, Request, BookQueue}
+  alias Library.Users
+
+  @doc """
+  Check out a book by book id and user id.
+
+  If the book is already on loan, return {:error, "Book already on loan."},
+  otherwise return {:ok, book_loan}.
+  """
+  def checkout_book(book_id, user_id) do
+    book = get_book!(book_id)
+    user = Users.get_user!(user_id)
+
+    if check_loaned?(book_id) do
+      {:error, "Book already on loan."}
+    else
+      {:ok, create_book_loan!(book, user)}
+    end
+  end
+
+  @doc """
+  Check in a book by book id and user id.
+
+  If the book is not on loan, return {:error, "Book not on loan."},
+  otherwise return {:ok, book_loan}.
+  """
+  def checkin_book(book_id, user_id) do
+    query = from bl in BookLoan,
+            join: b in assoc(bl, :book),
+            where: b.id == ^book_id,
+            join: u in assoc(bl, :user),
+            where: u.id == ^user_id,
+            where: is_nil(bl.checked_in)
+
+    case Repo.all(query) do
+      [] ->
+        {:error, "Book not on loan."}
+      [book_loan | _tail] ->
+        time = NaiveDateTime.utc_now()
+        update_book_loan(book_loan, %{checked_in: time})
+        {:ok, book_loan}
+    end
+  end
+
+  @doc """
+  Check to see if a book is on loan by book id.
+  """
+  def check_loaned?(book_id) do
+    query = from bl in BookLoan,
+            preload: [:book],
+            join: b in assoc(bl, :book),
+            where: b.id == ^book_id,
+            where: is_nil(bl.checked_in)
+
+    case Repo.all(query) do
+      [_book_loan | _tail] ->
+        true
+      [] ->
+        false
+    end
+  end
 
   @doc """
   Returns the list of books.
@@ -20,7 +79,7 @@ defmodule Library.Books do
   """
   def list_books do
     query = from b in Book,
-            preload: [:request, :book_loan]
+            preload: [:request, :book_loan, :book_queue]
     Repo.all(query)
   end
 
@@ -61,7 +120,8 @@ defmodule Library.Books do
       ** (Ecto.NoResultsError)
 
   """
-  def get_book!(id), do: Repo.get!(Book, id)
+  def get_book!(id), do: Repo.get!(Book, id) |> Repo.preload(:book_loan)
+
   @doc """
   Gets a book using the title
 
@@ -293,7 +353,6 @@ defmodule Library.Books do
     |> Ecto.Changeset.put_assoc(join, [assoc])
     |> Repo.update!()
   end
-  alias Library.Books.Author
 
   @doc """
   Returns the list of authors.
@@ -373,7 +432,6 @@ defmodule Library.Books do
     Repo.delete(author)
   end
 
-  alias Library.Books.Request
 
   @doc """
   Returns the list of requests.
@@ -458,7 +516,6 @@ defmodule Library.Books do
     Repo.delete(request)
   end
 
-  alias Library.Books.BookLoan
 
   @doc """
   Returns the list of book_loans.
@@ -554,5 +611,58 @@ defmodule Library.Books do
   """
   def change_book_loan(%BookLoan{} = book_loan) do
     BookLoan.changeset(book_loan, %{})
+  end
+
+
+  @doc """
+  Gets a single book_queue.
+
+  Raises `Ecto.NoResultsError` if the Book queue does not exist.
+
+  ## Examples
+
+      iex> get_book_queue!(123)
+      %BookQueue{}
+
+      iex> get_book_queue!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_book_queue!(id), do: Repo.get!(BookQueue, id)
+
+  @doc """
+  Deletes a BookQueue.
+
+  ## Examples
+
+  iex> delete_book_queue(book_queue)
+  {:ok, %BookQueue{}}
+
+  iex> delete_book_queue(book_queue)
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_book_queue(%BookQueue{} = book_queue) do
+    Repo.delete(book_queue)
+  end
+
+  @doc """
+  Creates a book_queue.
+
+  ## Examples
+
+  iex> create_book_queue(%{field: value})
+  {:ok, %BookLoan{}}
+
+  iex> create_book_queue(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def create_book_queue!(attrs \\ %{}, user, book) do
+    user_assoc = Ecto.build_assoc(user, :book_queue, attrs)
+    user_assoc_two = Ecto.build_assoc(book, :book_queue, user_assoc)
+    %BookQueue{}
+    |> BookQueue.changeset(Map.from_struct user_assoc_two)
+    |> Repo.insert()
   end
 end

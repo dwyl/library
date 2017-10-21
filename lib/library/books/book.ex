@@ -17,8 +17,9 @@ defmodule Library.Books.Book do
     field :title, :string
     field :type, :string
     many_to_many :author, Library.Books.Author, join_through: "author_books"
-    has_one :book_loan, Library.Books.BookLoan
+    has_many :book_loan, Library.Books.BookLoan
     has_many :request, Library.Books.Request
+    has_many :book_queue, Library.Books.BookQueue
 
     timestamps()
   end
