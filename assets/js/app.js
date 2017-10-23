@@ -17,15 +17,15 @@ var toFilter = [].slice.call(document.getElementsByClassName('filters'));
 var filter = document.getElementById('filter_button')
 
 toFilter.forEach(function (element) {
-  element.className += " sr-only";
+  element.className += " sr-only-s";
 })
 filter.addEventListener('click', function (e) {
     e.preventDefault();
     toFilter.forEach(function (element) {
-      if (element.className.includes("sr-only")) {
-        element.className = element.className.replace(" sr-only", "");
+      if (element.className.includes("sr-only-s")) {
+        element.className = element.className.replace(" sr-only-s", "");
       } else {
-        element.className += " sr-only";
+        element.className += " sr-only-s";
       }
     })
   });

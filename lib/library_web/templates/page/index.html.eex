@@ -1,28 +1,30 @@
-<div class="bg-white mt2 pt3">
+<div class="bg-white mt2 pt3 ph3-ns">
   <div class="ph3 pt1 pb1">
     <label class="dark-grey f5 ph1" for="search">Search the library</label>
-    <span class="fr ph1"><a href="#" id="filter_button" class="f5 link dark-grey v-top">
+    <span class="fr ph1"><a href="#" id="filter_button" class="f5 link dark-grey v-top dn-l">
       <svg class="w1 h1 f-dark-grey" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M480 1408v128h-352v-128h352zm352-128q26 0 45 19t19 45v256q0 26-19 45t-45 19h-256q-26 0-45-19t-19-45v-256q0-26 19-45t45-19h256zm160-384v128h-864v-128h864zm-640-512v128h-224v-128h224zm1312 1024v128h-736v-128h736zm-960-1152q26 0 45 19t19 45v256q0 26-19 45t-45 19h-256q-26 0-45-19t-19-45v-256q0-26 19-45t45-19h256zm640 512q26 0 45 19t19 45v256q0 26-19 45t-45 19h-256q-26 0-45-19t-19-45v-256q0-26 19-45t45-19h256zm320 128v128h-224v-128h224zm0-512v128h-864v-128h864z"/></svg> Filters</a></span>
   </div>
   <div class="w-100 ph3">
     <%= form_for @conn, page_path(@conn, :search), [as: :search, method: :get, enforce_utf8: false], fn f -> %>
-      <%= text_input f, :title, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb", placeholder: "programming phoenix"%>
-      <%= text_input f, :author, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb filters", placeholder: "author"%>
-      <%= text_input f, :isbn, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb filters", placeholder: "isbn"%>
+      <%= text_input f, :title, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb w-33-l", placeholder: "programming phoenix"%>
+      <%= text_input f, :author, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb filters w-33-l", placeholder: "author"%>
+      <%= text_input f, :isbn, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb filters w-33-l", placeholder: "isbn"%>
       <button class="sr-only">submit</submit>
     <% end %>
   </div>
 </div>
-<h2 class="f5 fw3 dwyl-teal pl3 mt3 mb2">
-  <%= results_text(@conn.assigns) %>
-</h2>
-<div class="ph2">
-  <%= for book <- @books do %>
-    <%= component("book", conn: @conn, book: book) %>
-  <% end %>
-</div>
-<%= unless assigns.web || !Map.get(@conn.params, "search") do %>
-  <h2 class="f5 fw3 dwyl-teal pl3 mt3 mb3">
-    Not what you want? <%= link("Search the web", to: search_the_web_url(@conn), class: "dwyl-teal") %>
+<section class="ph3-ns pb3-ns">
+  <h2 class="f5 fw3 dwyl-teal pl3 mt3 mb2">
+    <%= results_text(@conn.assigns) %>
   </h2>
-<% end %>
+  <div class="f0">
+    <%= for book <- @books do %>
+      <%= component("book", conn: @conn, book: book) %>
+    <% end %>
+  </div>
+  <%= unless assigns.web || !Map.get(@conn.params, "search") do %>
+    <h2 class="f5 fw3 dwyl-teal pl3 mt3 mb3">
+      Not what you want? <%= link("Search the web", to: search_the_web_url(@conn), class: "dwyl-teal") %>
+    </h2>
+  <% end %>
+</section>
