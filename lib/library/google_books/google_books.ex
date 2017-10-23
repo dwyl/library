@@ -13,10 +13,16 @@ defmodule Library.GoogleBooks do
     the google books API, returning the relevant results
   """
   def google_books_search(search_query, search_category) do
-      search_query
+    search_query
       |> create_url(search_category)
       |> @httpoison.get
       |> handle_google_api_response
+  end
+
+  def google_books_search(title, author, isbn) do
+    full_search_url(title, author, isbn)
+    |> @httpoison.get
+    |> handle_google_api_response
   end
 
   defp handle_google_api_response(result) do
@@ -88,6 +94,17 @@ defmodule Library.GoogleBooks do
       _ ->
         ""
     end
+  end
+
+  def full_search_url(title, author, isbn) do
+    key = System.get_env "GOOGLE_BOOKS_KEY"
+    url = "https://www.googleapis.com/books/v1/volumes?maxResults=20&key=#{key}&q="
+
+    title = (title != "" && "+intitle:#{URI.encode(title)}") || ""
+    author = (author != "" && "+inauthor:#{URI.encode(author)}") || ""
+    isbn = (isbn != "" && "+isbn:#{URI.encode(isbn)}") || ""
+
+    url <> title <> author <> isbn
   end
 
   def get_values_from_map(map_to_decode, list_of_keys) do

@@ -136,28 +136,30 @@ defmodule Library.Books do
 """
   def get_book_by_title!(title), do: Repo.get_by!(Book, title: title)
 
+  @doc """
+    Gets a book using the title and author_list
+
+    Returns an empty list for no results
+
+    ## Examples
+    iex> get_book_by_title_and_authors("harry potter")
+    [%Book{}]
+
+    iex> get_book_by_title_and_authors("not a title")
+    []
+  """
   def get_books_by_title_and_authors(%{"title" => title, "author_list" => author_list}), do: get_books_by_title_and_authors(title, author_list)
-
   def get_books_by_title_and_authors(%{title: title, author_list: author_list}), do: get_books_by_title_and_authors(title, author_list)
-
   def get_books_by_title_and_authors(title, author_list) do
     query = from b in "books",
             where: b.title == ^title,
             where: b.author_list == ^author_list,
             select: b.title
 
-
     Repo.all(query)
   end
 
-  def book_exists?(book) do
-    case get_books_by_title_and_authors(book) do
-      [] ->
-        false
-      _ ->
-        true
-    end
-  end
+  def book_exists?(book), do: get_books_by_title_and_authors(book) != []
 
   @doc """
   Updates a book to be owned.

@@ -9,8 +9,8 @@ defmodule LibraryWeb.PageController do
     render(conn, "index.html", books: books, web: false)
   end
 
-  def search(conn, %{"search" => %{"author" => _author, "isbn" => _isbn, "title" => title}, "web" => _web}) do
-    books = GoogleBooks.google_books_search(title, "title")
+  def search(conn, %{"search" => %{"author" => author, "isbn" => isbn, "title" => title}, "web" => _web}) do
+    books = GoogleBooks.google_books_search(title, author, isbn)
 
     render(conn, "index.html", books: books, web: "web")
   end
@@ -20,7 +20,7 @@ defmodule LibraryWeb.PageController do
       search_books(author, isbn, title)
       |> case do
         [] ->
-          {true, GoogleBooks.google_books_search(title, "title")}
+          {true, GoogleBooks.google_books_search(title, author, isbn)}
         results ->
           {false, results}
       end
