@@ -77,6 +77,18 @@ defmodule Library.BooksTest do
       assert Enum.count(Books.search_books("", "123", "")) == 1
     end
 
+    test "replace_matches_with_db/1 replaces any matched books with the database equivalent" do
+      book_authors_fixture(%{title: "some book", author_list: ["some author"], isbn_13: "123"})
+      db_book = Books.get_book_by_title!("some book")
+
+      book_1 = %{title: "incorrect book", author_list: ["incorrect author"]}
+      book_2 = %{title: "some book", author_list: ["some author"]}
+
+      books = [book_1, book_2]
+
+      assert Books.replace_matches_with_db(books) == [book_1, db_book]
+    end
+
     test "get_book!/1 returns the book with given id" do
       book = book_fixture()
       fetched_book = Books.get_book!(book.id)
@@ -154,7 +166,8 @@ defmodule Library.BooksTest do
       Books.create_book_authors!(%{title: "some book", author_list: ["some author", "another author"]})
       Books.create_book_authors!(%{title: "another book", author_list: ["some author"]})
 
-      [%{title: title}, %{title: title_two}] = Books.list_books
+      %{title: title} = Books.get_book_by_title!("some book")
+      %{title: title_two} = Books.get_book_by_title!("another book")
 
       authors = Books.list_authors()
 

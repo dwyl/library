@@ -104,7 +104,24 @@ defmodule Library.Books do
     Repo.all(query)
   end
 
+  @doc """
+  Replaces non-database books with the database version if it exists.
 
+  Takes a list of books and returns a list of books with updated entries.
+  """
+  def replace_matches_with_db(books) do
+    Enum.map(books, fn book ->
+      query = from b in Book,
+              preload: [:book_loan],
+              where: b.title == ^book.title,
+              where: b.author_list == ^book.author_list
+
+      case Repo.all(query) do
+        [db_book] -> db_book
+        [] -> book
+      end
+    end)
+  end
 
   @doc """
   Gets a single book.
@@ -134,7 +151,7 @@ defmodule Library.Books do
   iex> get_book_by_title!("not a title")
   Error
 """
-  def get_book_by_title!(title), do: Repo.get_by!(Book, title: title)
+  def get_book_by_title!(title), do: Repo.get_by!(Book, title: title) |> Repo.preload(:book_loan)
 
   @doc """
     Gets a book using the title and author_list
