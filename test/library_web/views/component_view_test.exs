@@ -19,6 +19,11 @@ defmodule LibraryWeb.ComponentViewTest do
     @on_loan_book Map.put(@owned_book,
                           :book_loan,
                           [%{user_id: 1, checked_in: nil}])
+    @on_loan_book_user Map.put(@owned_book,
+                          :book_loan,
+                          [%{user_id: 1,
+                             checked_in: nil,
+                             user: %{first_name: "f", username: "f"}}])
     @requested_book Map.put(@web_book, :request, [1])
 
     test "create_query_string builds a book querystring" do
@@ -92,6 +97,24 @@ defmodule LibraryWeb.ComponentViewTest do
       assert ComponentView.get_button_options(@owned_book, user_conn) ==
         [to: "/checkout/1",
          class: "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal"]
+    end
+
+    test "test loan_html for books loaned to you", %{conn: conn} do
+      user_conn = Map.merge(conn, @normal_user)
+      assert ComponentView.loan_html(@on_loan_book_user, user_conn) ==
+        {"dwyl-teal", "Book on loan to you"}
+    end
+
+    test "test loan_html for books loaned to other users", %{conn: conn} do
+      user_conn = Map.merge(conn, @second_user)
+      assert ComponentView.loan_html(@on_loan_book_user, user_conn) ==
+        {"dwyl-red", "Currently on loan to f (f)"}
+    end
+
+    test "test loan_html returns a colour and message for loaned / not loaned books", %{conn: conn} do
+      user_conn = Map.merge(conn, @second_user)
+      assert ComponentView.loan_html(@on_loan_book_user, user_conn) ==
+        {"dwyl-red", "Currently on loan to f (f)"}
     end
   end
 end

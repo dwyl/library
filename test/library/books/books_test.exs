@@ -428,9 +428,6 @@ defmodule Library.BooksTest do
       assert {:ok, %BookQueue{} = book_queue} =
          Books.create_book_queue!(@valid_attrs, user, book)
 
-      assert {:ok, %BookLoan{} = book_loan} =
-         Books.create_book_loan!(@valid_attrs, user, book)
-
       assert book_queue.user_id == user.id
       assert book_queue.book_id == book.id
     end
