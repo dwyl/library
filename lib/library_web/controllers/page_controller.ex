@@ -11,6 +11,7 @@ defmodule LibraryWeb.PageController do
 
   def search(conn, %{"search" => %{"author" => author, "isbn" => isbn, "title" => title}, "web" => _web}) do
     books = GoogleBooks.google_books_search(title, author, isbn)
+    |> replace_matches_with_db()
 
     render(conn, "index.html", books: books, web: "web")
   end
@@ -29,7 +30,19 @@ defmodule LibraryWeb.PageController do
   end
 
   def show(conn, %{"id" => id} = _params) do
-    render(conn, "index.html", books: [get_book!(id)], web: false)
+    render(conn, "show.html", book: get_preloaded_book!(id), web: false)
+  end
+
+  def show_web(conn, book) do
+    book =
+      book
+      |> swap_to_atom_keys
+
+    render(conn, "show.html", book: book, web: "web")
+  end
+
+  defp swap_to_atom_keys(map) do
+    for {key, val} <- map, into: %{}, do: {String.to_atom(key), val}
   end
 
   def checkout(conn, %{"id" => id} = _params) do

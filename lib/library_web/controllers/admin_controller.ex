@@ -1,10 +1,13 @@
 defmodule LibraryWeb.AdminController do
   use LibraryWeb, :controller
 
+  import Library.Books
   alias Library.GoogleBooks
 
   def index(conn, _params) do
-    render(conn, "index.html", books: [])
+    books = list_books()
+
+    render(conn, "index.html", books: books, web: false)
   end
 
   def search(conn, %{"search" => %{"query" => query}}) do

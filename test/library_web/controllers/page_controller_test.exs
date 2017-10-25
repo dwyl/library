@@ -36,6 +36,12 @@ defmodule LibraryWeb.PageControllerTest do
     assert html_response(conn, 200) =~ "dwyl | Library"
   end
 
+  test "GET /show-web shows a single book by query params", %{conn: conn} do
+    conn = conn
+    |> get("/show-web", %{"title" => "some book", "author_list" => "some author", "isbn_10" => "123"})
+    assert html_response(conn, 200) =~ "dwyl | Library"
+  end
+
   test "GET /checkout/:id checks out a book", %{conn: conn} do
     %{id: id} = Books.create_book!(%{title: "some title", author_list: ["some author"]})
 

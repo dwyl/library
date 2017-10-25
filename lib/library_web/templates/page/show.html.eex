@@ -1,0 +1,6 @@
+<div class="bg-white mt2 pt3">
+  <%= component("search_bar", conn: @conn) %>
+</div>
+<div class="pa4-l pa3">
+  <%= component("single_book", conn: @conn, book: @book) %>
+</div>

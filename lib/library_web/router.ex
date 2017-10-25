@@ -21,6 +21,7 @@ defmodule LibraryWeb.Router do
     get "/checkout/:id", PageController, :checkout
     get "/checkin/:id", PageController, :checkin
     get "/show/:id", PageController, :show
+    get "/show-web", PageController, :show_web
   end
 
   scope "/admin", LibraryWeb do
