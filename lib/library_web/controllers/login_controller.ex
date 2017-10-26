@@ -5,13 +5,6 @@ defmodule LibraryWeb.LoginController do
 
   @httpoison Application.get_env(:library, :httpoison) || HTTPoison
 
-  @doc """
-    Just shows the user the plain index.html
-  """
-  def index(conn, _params) do
-    render conn, "index.html"
-  end
-
 
   @doc """
     Creates a github URL with the scope for getting the user's email and orgs
@@ -26,7 +19,7 @@ defmodule LibraryWeb.LoginController do
         # TODO: set internal server error
         conn
         |> put_flash(:error, "Something went wrong on our end, try again later!")
-        |> render("index.html")
+        |> redirect(to: page_path(conn, :index))
       {:ok, url} ->
         redirect conn, external: url
     end
@@ -48,7 +41,7 @@ defmodule LibraryWeb.LoginController do
       {:error, _error} ->
         conn
         |> put_flash(:error, "Problem getting info from github, try again later")
-        |> render("index.html")
+        |> redirect(to: page_path(conn, :index))
       {:ok, user} ->
         case add_user(user) do
             {:ok, user} ->
@@ -71,7 +64,7 @@ defmodule LibraryWeb.LoginController do
     |> delete_session(:user_id)
     |> redirect(to: page_path(conn, :index))
   end
-  
+
   defp add_user(%{"name" => first_name, "login" => username, "access_token" => token}) do
     case get_orgs_and_email(token) do
       {:ok, %{"orgs" => orgs, "email" => email}} ->
