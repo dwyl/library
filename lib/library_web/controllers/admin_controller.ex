@@ -6,17 +6,14 @@ defmodule LibraryWeb.AdminController do
   plug LibraryWeb.Plugs.RequireAdmin
 
   def create(conn, %{"author_list" => authors} = params) do
-      params
+      book = params
       |> Map.put("author_list", String.split(authors, ";"))
       |> Map.put("owned", true)
       |> Library.Books.create_book_authors_return_book!
-      |> case do
-        {:ok, book} ->
-          conn
-          |> put_flash(:info, "Book added")
-          |> redirect(to: page_path(conn, :show, book.id))
-      end
 
+      conn
+      |> put_flash(:info, "Book added")
+      |> redirect(to: page_path(conn, :show, book.id))
   end
 
   def delete(conn, %{"id" => id}) do
