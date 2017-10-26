@@ -1,18 +1,22 @@
-<div class="bg-white mt2 pt3">
-  <div class="ph3 pt1 pb1">
-    <label class="dark-grey f5 ph1" for="search">Search the library</label>
-    <span class="fr ph1"><a href="#" id="filter_button" class="f5 link dark-grey v-top">
-      <svg class="w1 h1 f-dark-grey" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M480 1408v128h-352v-128h352zm352-128q26 0 45 19t19 45v256q0 26-19 45t-45 19h-256q-26 0-45-19t-19-45v-256q0-26 19-45t45-19h256zm160-384v128h-864v-128h864zm-640-512v128h-224v-128h224zm1312 1024v128h-736v-128h736zm-960-1152q26 0 45 19t19 45v256q0 26-19 45t-45 19h-256q-26 0-45-19t-19-45v-256q0-26 19-45t45-19h256zm640 512q26 0 45 19t19 45v256q0 26-19 45t-45 19h-256q-26 0-45-19t-19-45v-256q0-26 19-45t45-19h256zm320 128v128h-224v-128h224zm0-512v128h-864v-128h864z"/></svg> Filters</a></span>
-  </div>
-  <div class="w-100 ph3">
-    <%= form_for @conn, page_path(@conn, :search), [as: :search, method: :get, enforce_utf8: false], fn f -> %>
-      <%= text_input f, :title, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb", placeholder: "programming phoenix"%>
-      <%= text_input f, :author, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb filters", placeholder: "author"%>
-      <%= text_input f, :isbn, class: "w-100 focus-light-grey dark-grey pv2 ph2 bg-light-grey input-reset ba b--black-20 mb3 bs-bb filters", placeholder: "isbn"%>
-      <button class="sr-only">submit</submit>
-    <% end %>
-  </div>
+<div class="bg-white mt2 pt3 ph3-ns">
+  <%= component("search_bar", conn: @conn) %>
 </div>
-<div class="ph2 mt3">
+<%= if get_flash(@conn, :info) do %>
+<div role="alert" class="ph3 dwyl-teal fade center pt3 db v-top b">
+  <div class="br-100 bg-dwyl-teal dib w2 h2 v-mid pt2 mr2">
+    <svg aria-hidden="true" class="center db f-white" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"></path></svg>
+  </div>
+  <%= get_flash(@conn, :info) %>
+</div>
+<% end %>
+<%= if get_flash(@conn, :error) do %>
+<div role="alert" class="ph3 dwyl-red fade center db v-top b">
+  <div class="br-100 bg-dwyl-red dib w2 h2 v-mid pt2 mr2">
+    <svg aria-hidden="true" class="center db f-white" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"></path></svg>
+  </div>
+  <%= get_flash(@conn, :error) %>
+</div>
+<% end %>
+<div class="pa4-l pa3">
   <%= component("single_book", conn: @conn, book: @book) %>
 </div>

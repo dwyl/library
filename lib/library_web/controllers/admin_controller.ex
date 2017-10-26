@@ -1,43 +1,26 @@
 defmodule LibraryWeb.AdminController do
   use LibraryWeb, :controller
 
-  alias Library.GoogleBooks
-  alias Library.Books
+  import Library.Books
 
   plug LibraryWeb.Plugs.RequireAdmin
 
-  def index(conn, _params) do
-    render(conn, "index.html", books: [])
-  end
-
-  def search(conn, %{"search" => %{"query" => query}}) do
-    books = GoogleBooks.google_books_search(query, "title")
-
-    render(conn, "index.html", books: books)
-  end
-
   def create(conn, %{"author_list" => authors} = params) do
-      params
+      book = params
       |> Map.put("author_list", String.split(authors, ";"))
       |> Map.put("owned", true)
-      |> Library.Books.create_book_authors!
-      |> case do
-        false ->
-          conn
-          |> put_flash(:info, "Book not added, already in library")
-        _ ->
-          conn
-          |> put_flash(:info, "Book added")
-      end
-      |> render("index.html", books: [])
+      |> create_book_authors_return_book!
 
+      conn
+      |> put_flash(:info, "Book added")
+      |> redirect(to: page_path(conn, :show, book.id))
   end
 
   def delete(conn, %{"id" => id}) do
 
-    Books.get_book!(id)
-    |> Books.delete_book_and_unique_authors
+    get_book!(id)
+    |> delete_book_and_unique_authors
 
-    render(conn, "index.html", books: [])
+    redirect(conn, to: page_path(conn, :index))
   end
 end

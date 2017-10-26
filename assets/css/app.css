@@ -38,6 +38,10 @@
   min-width: 2.5rem;
 }
 
+.min-h5{
+  min-height: 17rem;
+}
+
 .dark-grey{
   color: #4D4D4D;
 }
@@ -52,6 +56,10 @@
 
 .f-dark-grey{
   fill: #4D4D4D;
+}
+
+.bg-dark-grey{
+  background-color: #4d4d4d;
 }
 
 .f-dwyl-teal{
@@ -92,4 +100,37 @@
   border: 0;
   overflow: hidden;
   clip: rect(0,0,0,0);
+}
+
+.f0 {
+  font-size: 0;
+}
+
+@media screen and (max-width: 60em) {
+  .sr-only-s {
+    color: red;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .bg-white-l{
+    background-color: #fff;
+  }
+
+  .mw-50-l{
+    max-width: 50%;
+  }
+}
+
+
+.w-49{
+  width: 49%;
 }
