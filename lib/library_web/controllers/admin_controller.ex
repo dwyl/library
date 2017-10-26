@@ -4,6 +4,8 @@ defmodule LibraryWeb.AdminController do
   import Library.Books
   alias Library.GoogleBooks
 
+  plug LibraryWeb.Plugs.RequireAdmin
+
   def index(conn, _params) do
     books = list_books()
 

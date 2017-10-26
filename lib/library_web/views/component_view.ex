@@ -147,6 +147,7 @@ defmodule LibraryWeb.ComponentView do
   def loan_html(book, conn) do
     valid = "dwyl-teal"
     invalid = "dwyl-red"
+    user = get_user(conn)
 
     case on_loan(book) do
       nil ->
@@ -154,7 +155,7 @@ defmodule LibraryWeb.ComponentView do
           {valid, "In the dwyl library"}
       loan ->
         name = "#{loan.user.first_name} (#{loan.user.username})"
-        loan.user_id == conn.assigns.user.id && {valid, "Book on loan to you"} ||
+        user && loan.user_id == user.id && {valid, "Book on loan to you"} ||
           {invalid, "Currently on loan to #{name}"}
     end
   end

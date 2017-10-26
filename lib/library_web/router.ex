@@ -7,6 +7,7 @@ defmodule LibraryWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug LibraryWeb.Plugs.SetUser
   end
 
   pipeline :api do
@@ -31,6 +32,22 @@ defmodule LibraryWeb.Router do
     get "/search", AdminController, :search
     post "/create", AdminController, :create
   end
+
+  scope "/login", LibraryWeb do
+    pipe_through :browser
+
+    get "/", LoginController, :index
+    get "/github", LoginController, :login
+    get "/github-callback", LoginController, :callback
+    get "/logout", LoginController, :logout
+  end
+
+  scope "/logout", LibraryWeb do
+    pipe_through :browser
+
+    get "/", LoginController, :logout
+  end
+
 
   # Other scopes may use custom stacks.
   # scope "/api", LibraryWeb do
