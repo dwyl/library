@@ -48,6 +48,9 @@ defmodule Library.BooksTest do
         attrs
         |> Enum.into(@valid_attrs)
         |> Books.create_book!()
+        |> Repo.preload(:book_loan)
+        |> Repo.preload(:request)
+        |> Repo.preload(:book_queue)
     end
 
     def book_authors_fixture(attrs \\ %{}) do
@@ -59,8 +62,6 @@ defmodule Library.BooksTest do
     test "list_books/0 returns all books" do
       book =
         book_fixture()
-        |> Map.put(:book_loan, nil)
-        |> Map.put(:request, [])
 
       assert Books.list_books() == [book]
     end
@@ -139,9 +140,17 @@ defmodule Library.BooksTest do
       book = book_fixture()
       assert {:error, %Ecto.Changeset{}} =
         Books.update_book(book, @invalid_attrs)
-      assert book == Books.get_book!(book.id)
+
+      updated_book =
+        book.id
+        |> Books.get_book!()
+        |> Repo.preload(:book_queue)
+        |> Repo.preload(:request)
+
+      assert book == updated_book
     end
 
+    @tag :wip
     test "delete_book/1 deletes the book" do
       book = book_fixture()
       assert {:ok, %Book{}} = Books.delete_book(book)
@@ -157,7 +166,8 @@ defmodule Library.BooksTest do
       Books.create_book_authors!(%{title: "some book", author_list: ["some author", "another author"]})
       Books.create_book_authors!(%{title: "another book", author_list: ["some author"]})
 
-      [%{title: title}, %{title: title_two}] = Books.list_books
+      %{title: title} = Books.get_book_by_title!("some book")
+      %{title: title_two} = Books.get_book_by_title!("another book")
 
       authors = Books.list_authors()
 
@@ -309,8 +319,11 @@ defmodule Library.BooksTest do
     alias Library.Books.BookLoan
     alias Library.Users
 
-    @valid_attrs %{queue: [1, 2, 3], book_id: 1, user_id: 1}
-    @update_attrs %{queue: [1, 2, 3, 4]}
+    @valid_attrs %{book_id: 1, user_id: 1}
+    @base_time ~N[2017-01-10 00:00:00.000]
+    @valid_attrs_checked_in %{book_id: 1, user_id: 1, checked_in: @base_time}
+    @time ~N[2017-01-11 00:00:00.000]
+    @update_attrs %{checked_in: @time}
 
     def book_and_user_fixture do
       book = Books.create_book!(%{title: "A book", author_list: ["An Author"]})
@@ -351,14 +364,18 @@ defmodule Library.BooksTest do
 
       assert {:ok, %BookLoan{} = book_loan} =
          Books.create_book_loan!(@valid_attrs, user, book)
-      assert book_loan.queue == [1, 2, 3]
+      assert {:ok, %BookLoan{} = book_loan_checked_in} =
+        Books.create_book_loan!(@valid_attrs_checked_in, user, book)
+      assert book_loan.user_id == user.id
+      assert book_loan_checked_in.checked_in == @base_time
+
     end
 
     test "update_book_loan/2 with valid data updates the book_loan" do
       book_loan = book_loan_fixture()
       assert {:ok, book_loan} = Books.update_book_loan(book_loan, @update_attrs)
       assert %BookLoan{} = book_loan
-      assert book_loan.queue == [1, 2, 3, 4]
+      assert book_loan.checked_in == @time
     end
 
     test "delete_book_loan/1 deletes the book_loan" do
@@ -371,6 +388,55 @@ defmodule Library.BooksTest do
     test "change_book_loan/1 returns a book_loan changeset" do
       book_loan = book_loan_fixture()
       assert %Ecto.Changeset{} = Books.change_book_loan(book_loan)
+    end
+  end
+
+  describe "book_queue" do
+    alias Library.Books.BookQueue
+    alias Library.Books.BookLoan
+    alias Library.Users
+
+    @valid_attrs %{book_id: 1, user_id: 1}
+
+    def book_and_user_fixture_queue do
+      book = Books.create_book!(%{title: "A book", author_list: ["An Author"]})
+      {:ok, user} = Users.create_user(%{email: "a@a.com",
+                                 first_name: "a",
+                                 orgs: ["a inc"],
+                                 username: "a"})
+
+      {user, book}
+    end
+
+    def book_queue_fixture(attrs \\ %{}) do
+      book = Books.create_book!(%{title: "A book", author_list: ["An Author"]})
+      {:ok, user} = Users.create_user(%{email: "a@a.com",
+                                 first_name: "a",
+                                 orgs: ["a inc"],
+                                 username: "a"})
+      {:ok, book_queue} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Books.create_book_queue!(user, book)
+
+      book_queue
+    end
+
+    test "create_book_queue!/1 with valid data creates a book_loan" do
+      {user, book} = book_and_user_fixture_queue()
+
+      assert {:ok, %BookQueue{} = book_queue} =
+         Books.create_book_queue!(@valid_attrs, user, book)
+
+      assert book_queue.user_id == user.id
+      assert book_queue.book_id == book.id
+    end
+
+    test "delete_book_queue/1 deletes the book_queue" do
+      book_queue = book_queue_fixture()
+      assert {:ok, %BookQueue{}} = Books.delete_book_queue(book_queue)
+      assert_raise Ecto.NoResultsError, fn ->
+         Books.get_book_queue!(book_queue.id) end
     end
   end
 end

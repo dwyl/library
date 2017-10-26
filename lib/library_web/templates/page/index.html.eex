@@ -37,7 +37,7 @@
     <%= component("book", conn: @conn, book: book) %>
   <% end %>
 </div>
-<%= unless assigns.web do %>
+<%= unless assigns.web || !Map.get(@conn.params, "search") do %>
   <h2 class="f5 fw3 dwyl-teal pl3 mt3 mb3">
     Not what you want? <%= link("Search the web", to: search_the_web_url(@conn), class: "dwyl-teal") %>
   </h2>

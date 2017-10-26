@@ -18,6 +18,7 @@ defmodule LibraryWeb.AdminController do
   def create(conn, %{"author_list" => authors} = params) do
       params
       |> Map.put("author_list", String.split(authors, ";"))
+      |> Map.put("owned", true)
       |> Library.Books.create_book_authors!
       |> case do
         false ->

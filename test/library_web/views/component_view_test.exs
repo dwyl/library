@@ -14,8 +14,11 @@ defmodule LibraryWeb.ComponentViewTest do
     @owned_book %{title: "Some book",
                 author_list: ["Some author", "Some other author"],
                 owned: true,
-                web: false}
-    @on_loan_book Map.put(@owned_book, :book_loan, %{id: 1})
+                web: false,
+                id: 1}
+    @on_loan_book Map.put(@owned_book,
+                          :book_loan,
+                          [%{user_id: 1, checked_in: nil}])
     @requested_book Map.put(@web_book, :request, [1])
 
     test "create_query_string builds a book querystring" do
@@ -75,6 +78,20 @@ defmodule LibraryWeb.ComponentViewTest do
     test "get_button_text displays 'Requested' for the correct values" do
       assert ComponentView.get_button_text(@requested_book, @normal_user) == "Requested"
       assert ComponentView.get_button_text(@requested_book, @admin_user) != "Requested"
+    end
+
+    test "get_button_options generates the correct options for 'Check in'", %{conn: conn} do
+      admin_conn = Map.merge(conn, @admin_user)
+      assert ComponentView.get_button_options(@on_loan_book, admin_conn) ==
+        [to: "/checkin/1",
+         class: "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal"]
+    end
+
+    test "get_button_options generates the correct options for 'Check out'", %{conn: conn} do
+      user_conn = Map.merge(conn, @normal_user)
+      assert ComponentView.get_button_options(@owned_book, user_conn) ==
+        [to: "/checkout/1",
+         class: "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal"]
     end
   end
 end
