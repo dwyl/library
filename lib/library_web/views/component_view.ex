@@ -100,7 +100,7 @@ defmodule LibraryWeb.ComponentView do
       loan && user && (user.id == loan.user_id || admin) ->
         "Check in"
       loan ->
-        "Join queue"
+        "On loan"
       owned && admin ->
         "Remove"
       owned ->
@@ -118,6 +118,7 @@ defmodule LibraryWeb.ComponentView do
 
   def get_button_options(book, conn) do
     active = "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal"
+    error = "f6 w-100 tc link pv1 mb2 dib white bg-light-red"
     inactive = "f6 w-100 tc link pv1 mb2 dib moon-gray bg-light-grey"
 
     case get_button_text(book, conn) do
@@ -127,8 +128,8 @@ defmodule LibraryWeb.ComponentView do
         [to: admin_path(conn, :create) <> "?" <> create_query_string(book),
         class: active,
         method: :post]
-      "Join queue" ->
-        [to: "#", class: inactive]
+      "On loan" ->
+        [to: "#", class: error]
       "Check in" ->
         [to: page_path(conn, :checkin, Map.get(book, :id)), class: active]
       "Check out" ->
