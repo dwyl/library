@@ -43,12 +43,16 @@ defmodule LibraryWeb.ComponentView do
     web = Map.get(book, :web)
     request = Map.get(book, :request)
     owned = Map.get(book, :owned)
-    loan = Map.get(book, :book_loan)
+    loan = book
+           |> Map.get(:book_loan)
+           |> (fn book_loan ->
+                book_loan && Enum.find(book_loan, fn loan -> loan.checked_in == nil end) || nil
+              end).()
 
     cond do
       !user ->
         "Login"
-      loan && user && (user.id == loan.id || admin) ->
+      loan && user && (user.id == loan.user_id || admin) ->
         "Check in"
       loan ->
         "Join queue"
@@ -77,10 +81,12 @@ defmodule LibraryWeb.ComponentView do
         [to: admin_path(conn, :create) <> "?" <> create_query_string(book),
         class: active,
         method: :post]
+      "Join queue" ->
+        [to: "testing", class: active]
       "Check in" ->
-        [to: "testing", class: active]
+        [to: page_path(conn, :checkin, book.id), class: active]
       "Check out" ->
-        [to: "testing", class: active]
+        [to: page_path(conn, :checkout, book.id), class: active]
       "Remove" ->
         [to: "testing", class: active]
       "Request" ->

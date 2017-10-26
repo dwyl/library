@@ -5,7 +5,7 @@ defmodule Library.Books.BookLoan do
 
 
   schema "book_loans" do
-    field :queue, {:array, :integer}
+    field :checked_in, :naive_datetime
     belongs_to :user, Library.Users.User
     belongs_to :book, Library.Books.Book
 
@@ -15,7 +15,7 @@ defmodule Library.Books.BookLoan do
   @doc false
   def changeset(%BookLoan{} = book_loan, attrs) do
     book_loan
-    |> cast(attrs, [:queue, :book_id, :user_id])
+    |> cast(attrs, [:checked_in, :book_id, :user_id])
     |> validate_required([:book_id, :user_id])
   end
 end
