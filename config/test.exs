@@ -19,3 +19,4 @@ config :library, Library.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :library, :httpoison, Library.HTTPoison.InMemory
+config :library, :elixir_auth_github, Library.ElixirAuthGithub.InMemory

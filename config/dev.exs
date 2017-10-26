@@ -56,3 +56,7 @@ config :library, Library.Repo,
   database: "library_dev",
   hostname: "localhost",
   pool_size: 10
+
+  config :elixir_auth_github,
+    client_id: System.get_env("DEV_CLIENT_ID"),
+    client_secret: System.get_env("DEV_CLIENT_SECRET")
