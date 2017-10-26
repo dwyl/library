@@ -73,28 +73,30 @@ defmodule LibraryWeb.ComponentView do
 
   def get_button_options(book, conn) do
     active = "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal"
+    error = "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-red"
+    inactive = "f6 w-100 tc link pv1 mb2 dib moon-gray bg-light-grey"
 
     case get_button_text(book, conn) do
       "Login" ->
-        [to: "testing", class: active]
+        [to: "#", class: active]
       "Add book" ->
         [to: admin_path(conn, :create) <> "?" <> create_query_string(book),
         class: active,
         method: :post]
       "Join queue" ->
-        [to: "testing", class: active]
+        [to: "#", class: inactive]
       "Check in" ->
         [to: page_path(conn, :checkin, book.id), class: active]
       "Check out" ->
         [to: page_path(conn, :checkout, book.id), class: active]
       "Remove" ->
-        [to: "testing", class: active]
+        [to: "#", class: active]
       "Request" ->
-        [to: "testing", class: active]
+        [to: "#", class: inactive]
       "Requested" ->
-        [to: "testing", class: active]
+        [to: "#", class: inactive]
       "n/a" ->
-        [to: "testing", class: active]
+        [to: "#", class: inactive]
     end
   end
 end
