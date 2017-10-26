@@ -93,5 +93,12 @@ defmodule LibraryWeb.ComponentViewTest do
         [to: "/checkout/1",
          class: "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal"]
     end
+
+    test "get_button_options generates the correct options for 'Remove'", %{conn: conn} do
+      user_conn = Map.merge(conn, @admin_user)
+      assert ComponentView.get_button_options(@owned_book, user_conn) ==
+        [to: "/admin/delete/1",
+         class: "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal"]
+    end
   end
 end
