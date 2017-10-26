@@ -10,8 +10,8 @@ defmodule Library.Repo.Migrations.AddCheckinDate do
 
   def down do
     alter table(:book_loans) do
-      remove :checked_in, :naive_datetime
-      add :queue
+      remove :checked_in
+      add :queue, {:array, :integer}
     end
   end
 end
