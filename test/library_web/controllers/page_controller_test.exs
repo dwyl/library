@@ -1,5 +1,7 @@
 defmodule LibraryWeb.PageControllerTest do
   use LibraryWeb.ConnCase
+  import Plug.Test
+
   alias Library.Books
   alias Library.Users
 
@@ -50,10 +52,9 @@ defmodule LibraryWeb.PageControllerTest do
                                 is_admin: false,
                                 orgs: ["dwyl"],
                                 username: "finnhodgkin"})
-    assigns = Map.put(conn.assigns, :user, %{id: user_id})
 
     conn = conn
-    |> Map.put(:assigns, assigns)
+    |> init_test_session(%{user_id: user_id})
     |> get("/checkout/#{id}")
     assert html_response(conn, 302) =~ "redirected"
   end
@@ -66,12 +67,11 @@ defmodule LibraryWeb.PageControllerTest do
                                 is_admin: false,
                                 orgs: ["dwyl"],
                                 username: "finnhodgkin"})
-    assigns = Map.put(conn.assigns, :user, %{id: user_id})
 
     Books.checkout_book(id, user_id)
 
     conn = conn
-    |> Map.put(:assigns, assigns)
+    |> init_test_session(%{user_id: user_id})
     |> get("/checkout/#{id}")
     assert html_response(conn, 302) =~ "redirected"
   end
@@ -86,10 +86,8 @@ defmodule LibraryWeb.PageControllerTest do
 
                                 Books.checkout_book(id, user_id)
 
-    assigns = Map.put(conn.assigns, :user, %{id: user_id})
-
     conn = conn
-    |> Map.put(:assigns, assigns)
+    |> init_test_session(%{user_id: user_id})
     |> get("/checkin/#{id}")
     assert html_response(conn, 302) =~ "redirected"
   end
@@ -102,10 +100,8 @@ defmodule LibraryWeb.PageControllerTest do
                                 orgs: ["dwyl"],
                                 username: "finnhodgkin"})
 
-    assigns = Map.put(conn.assigns, :user, %{id: user_id})
-
     conn = conn
-    |> Map.put(:assigns, assigns)
+    |> init_test_session(%{user_id: user_id})
     |> get("/checkin/#{id}")
     assert html_response(conn, 302) =~ "redirected"
   end

@@ -15,7 +15,10 @@
   <body class="bg-light-grey">
     <a id="search"></a>
     <div class="h3 pb1 pt2"></div>
-    <nav class="h3 pb1 pt2 fixed w-100 bg-dwyl-teal top-0">
+      <nav class="h3 pb1 pt2 fixed w-100 bg-dwyl-teal top-0 ">
+    <div class="left-0 top-0 absolute pt3">
+    <%= link( get_login_button_text(@conn), to: get_login_button_route(@conn), class: "link db white fr f5 ml3 mt1 mb1") %>
+    </div>
       <%=  img_tag(static_path(@conn, "/images/dwyl-heart-only-logo-white.png"), class: "w3-5 mt1 db center") |> link(to: page_path(@conn, :index)) %>
       <div class="right-0 top-0 absolute pt3">
         <%= link("Search", to: "#search", class: "link db white fr f5 mr3 mt1 mb1") %>
