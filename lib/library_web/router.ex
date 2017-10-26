@@ -30,6 +30,7 @@ defmodule LibraryWeb.Router do
     get "/", AdminController, :index
     get "/search", AdminController, :search
     post "/create", AdminController, :create
+    get "/delete/:id", AdminController, :delete
   end
 
   scope "/login", LibraryWeb do
