@@ -23,6 +23,7 @@ defmodule LibraryWeb.PageController do
         [] ->
           {true, GoogleBooks.google_books_search(title, author, isbn)}
         results ->
+          IO.inspect results
           {false, results}
       end
 
