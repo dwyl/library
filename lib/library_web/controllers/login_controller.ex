@@ -22,12 +22,11 @@ defmodule LibraryWeb.LoginController do
   def login(conn, _params) do
 
     case @elixir_auth_github.login_url_with_scope(["user:email", "read:org"]) do
-      {:err, reason} ->
+      {:err, _reason} ->
         # TODO: set internal server error
-        conn = conn
-              |> put_flash(:error, "Something went wrong on our end, try again later!")
-
-        render conn, "index.html"
+        conn
+        |> put_flash(:error, "Something went wrong on our end, try again later!")
+        |> render("index.html")
       {:ok, url} ->
         redirect conn, external: url
     end
@@ -46,29 +45,24 @@ defmodule LibraryWeb.LoginController do
 
   def callback(conn, %{"code" => code}) do
     case @elixir_auth_github.github_auth(code) do
-      {:error, error} ->
+      {:error, _error} ->
         conn
         |> put_flash(:error, "Problem getting info from github, try again later")
         |> render("index.html")
       {:ok, user} ->
         case add_user(user) do
             {:ok, user} ->
-              conn = conn
-                    |> put_flash(:info, "added to db succesfully")
-                    |> put_session(:user_id, user.id)
-              redirect(conn, to: page_path(conn, :index))
+              conn
+              |> put_flash(:info, "Added to db succesfully")
+              |> put_session(:user_id, user.id)
             {:error, "not a dwyl member"} ->
-              conn = conn
-                     |> put_flash(:error, "Sorry, the library can only be used by members of dwyl!")
-
-              redirect(conn, to: page_path(conn, :index))
-            error ->
-              conn = conn
-                     |> put_flash(:error, "Problem adding user, sorry, try again later!")
-
-              redirect(conn, to: page_path(conn, :index))
-
+               conn
+               |> put_flash(:error, "Sorry, the library can only be used by members of dwyl!")
+            _error ->
+              conn
+              |> put_flash(:error, "Problem adding user, sorry, try again later!")
         end
+        |> redirect(to: page_path(conn, :index))
     end
   end
 
@@ -126,7 +120,7 @@ defmodule LibraryWeb.LoginController do
           error ->
             error
         end
-      {:error, reason} ->
+      {:error, _reason} ->
         {:error, "problem getting orgs"}
     end
   end
@@ -152,7 +146,7 @@ defmodule LibraryWeb.LoginController do
           error ->
             error
         end
-      {:error, reason} ->
+      {:error, _reason} ->
         {:error, "problem getting emails"}
     end
   end
