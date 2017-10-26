@@ -215,11 +215,26 @@ defmodule Library.Books do
         |> Repo.preload(:author)
         |> create_authors_for_book!()
       end
+    end
+  end
+
+  @doc """
+    does exactly the same as create_book_authors! but returns the book that was inserted, rather than {:ok, :ok}
+  """
+  def create_book_authors_return_book!(attrs \\ %{}) do
+    unless book_exists?(attrs) do
+      Repo.transaction fn ->
+        book = create_book!(attrs)
+        book
+        |> Repo.preload(:author)
+        |> create_authors_for_book!()
+
+        book
+      end
     else
       false
     end
   end
-
   @doc """
   Adds all the authors of a book to the authors table.
 

@@ -27,8 +27,6 @@ defmodule LibraryWeb.Router do
   scope "/admin", LibraryWeb do
     pipe_through :browser
 
-    get "/", AdminController, :index
-    get "/search", AdminController, :search
     post "/create", AdminController, :create
     get "/delete/:id", AdminController, :delete
   end
@@ -36,7 +34,6 @@ defmodule LibraryWeb.Router do
   scope "/login", LibraryWeb do
     pipe_through :browser
 
-    get "/", LoginController, :index
     get "/github", LoginController, :login
     get "/github-callback", LoginController, :callback
     get "/logout", LoginController, :logout

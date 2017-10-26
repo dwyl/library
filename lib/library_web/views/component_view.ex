@@ -73,7 +73,7 @@ defmodule LibraryWeb.ComponentView do
 
   def get_button_options(book, conn) do
     active = "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-teal"
-    error = "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-red"
+    # error = "f6 w-100 tc link dim pv1 mb2 dib white bg-dwyl-red"
     inactive = "f6 w-100 tc link pv1 mb2 dib moon-gray bg-light-grey"
 
     case get_button_text(book, conn) do
