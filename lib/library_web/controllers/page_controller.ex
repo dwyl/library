@@ -34,9 +34,7 @@ defmodule LibraryWeb.PageController do
   end
 
   def show_web(conn, book) do
-    book =
-      book
-      |> swap_to_atom_keys
+    book = swap_to_atom_keys(book)
 
     render(conn, "show.html", book: book, web: "web")
   end

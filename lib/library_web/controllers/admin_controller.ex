@@ -3,6 +3,7 @@ defmodule LibraryWeb.AdminController do
 
   import Library.Books
   alias Library.GoogleBooks
+  alias Library.Books
 
   plug LibraryWeb.Plugs.RequireAdmin
 
@@ -33,5 +34,13 @@ defmodule LibraryWeb.AdminController do
       end
       |> render("index.html", books: [])
 
+  end
+
+  def delete(conn, %{"id" => id}) do
+
+    Books.get_book!(id)
+    |> Books.delete_book_and_unique_authors
+
+    render(conn, "index.html", books: [])
   end
 end

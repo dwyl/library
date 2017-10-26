@@ -83,4 +83,14 @@ defmodule LibraryWeb.AdminControllerTest do
     |> post("/admin/create", book)
     assert html_response(conn, 302) =~ "redirected"
   end
+
+  test "GET /delete/ with access", %{conn: conn} do
+    {:ok, %User{id: user_id}} = Users.create_user(@admin)
+    Books.create_book_authors!(%{title: "some title", author_list: ["some author"]})
+    [%{id: id} | _tail] = Books.list_books()
+    conn = conn
+    |> init_test_session(%{user_id: user_id})
+    |> get("/admin/delete/#{id}")
+    assert html_response(conn, 200) =~ "dwyl | Library"
+  end
 end
