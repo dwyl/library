@@ -42,6 +42,10 @@
   min-height: 17rem;
 }
 
+.min-w-50{
+  min-width: 50%;
+}
+
 .dark-grey{
   color: #4D4D4D;
 }

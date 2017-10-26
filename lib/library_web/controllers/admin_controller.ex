@@ -18,7 +18,8 @@ defmodule LibraryWeb.AdminController do
 
   def delete(conn, %{"id" => id}) do
 
-    get_book!(id)
+    id
+    |> get_book!
     |> delete_book_and_unique_authors
 
     redirect(conn, to: page_path(conn, :index))

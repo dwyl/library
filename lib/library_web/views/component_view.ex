@@ -160,4 +160,15 @@ defmodule LibraryWeb.ComponentView do
           {invalid, "Currently on loan to #{name}"}
     end
   end
+
+  def to_readable_date(date) do
+    "#{pad(date.day)}/#{pad(date.month)}/#{date.year}" <>
+    " #{pad(date.hour)}:#{pad(date.minute)}:#{pad(date.second)}"
+  end
+
+  defp pad(int) do
+    int
+    |> Integer.to_string
+    |> String.pad_leading(2, "0")
+  end
 end

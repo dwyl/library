@@ -123,5 +123,10 @@ defmodule LibraryWeb.ComponentViewTest do
       assert ComponentView.loan_html(@on_loan_book_user, user_conn) ==
         {"dwyl-red", "Currently on loan to f (f)"}
     end
+
+    test "to_readable_date translates a NaiveDateTime into a string" do
+      assert ComponentView.to_readable_date(~N[2017-01-10 00:00:00.000]) ==
+        "10/01/2017 00:00:00"
+    end
   end
 end
