@@ -55,10 +55,10 @@ defmodule LibraryWeb.ComponentViewTest do
       assert ComponentView.get_button_text(@on_loan_book, @second_user) != "Check in"
     end
 
-    test "get_button_text displays 'Join queue' for the correct values" do
-      assert ComponentView.get_button_text(@on_loan_book, @admin_user) != "Join queue"
-      assert ComponentView.get_button_text(@on_loan_book, @normal_user) != "Join queue"
-      assert ComponentView.get_button_text(@on_loan_book, @second_user) == "Join queue"
+    test "get_button_text displays 'On loan' for the correct values" do
+      assert ComponentView.get_button_text(@on_loan_book, @admin_user) != "On loan"
+      assert ComponentView.get_button_text(@on_loan_book, @normal_user) != "On loan"
+      assert ComponentView.get_button_text(@on_loan_book, @second_user) == "On loan"
     end
 
     test "get_button_text displays 'Check out' for the correct values" do
