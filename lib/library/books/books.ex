@@ -199,6 +199,7 @@ defmodule Library.Books do
 
     book
   end
+
   defp update_owned(%{owned: owned} = book) do
     update_book(book, %{owned: !owned})
   end
