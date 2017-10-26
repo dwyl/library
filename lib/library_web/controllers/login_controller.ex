@@ -66,6 +66,12 @@ defmodule LibraryWeb.LoginController do
     end
   end
 
+  def logout(conn, _params) do
+    conn
+    |> delete_session(:user_id)
+    |> redirect(to: page_path(conn, :index))
+  end
+  
   defp add_user(%{"name" => first_name, "login" => username, "access_token" => token}) do
     case get_orgs_and_email(token) do
       {:ok, %{"orgs" => orgs, "email" => email}} ->

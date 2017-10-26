@@ -62,4 +62,9 @@ defmodule LibraryWeb.LoginControllerTest do
     assert html_response(conn, 302) =~ "redirected"
   end
 
+  test "GET /logout", %{conn: conn} do
+    conn = get conn, "/logout"
+    assert html_response(conn, 302) =~ "redirected"
+  end
+
 end
