@@ -1,0 +1,28 @@
+<div class="w-100 db v-top mb2 pa4 bs-bb bg-white link dark-grey">
+  <div class="w4 absolute-m absolute-l center db pr3">
+    <%= img_tag(get_large_thumbnail(assigns.book, assigns.conn), alt: "#{assigns.book.title} cover image", class: "w4 shadow-4") %>
+    <div class="w-100 pt1">
+      <%= link(get_button_text(assigns.book, assigns.conn), get_button_options(assigns.book, assigns.conn)) %>
+    </div>
+  </div>
+  <div class="ml6-m ml6-l pl3-m pl3-l f5 dib v-top fg1 lh-copy">
+    <h2 class="lh-copy f5 ma0 pa0 mb2"><%= assigns.book.title %></h2>
+    <table>
+      <tbody>
+        <tr>
+          <td class="b f6 prs">
+            Availability:
+          </td>
+          <td class="dib">
+            <% {colour, text} = loan_html(assigns.book, assigns.conn) %>
+            <div class="f5 <%= colour %>"><%= text %></div>
+          </td>
+        </tr>
+        <%= for [title, value] <- list_book_props(assigns.book) do %>
+            <tr><td class="b f6 pr2"><%= title %>:</td><td class="dib"><%= value %></td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </>
+
+</div>

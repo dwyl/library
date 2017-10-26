@@ -139,6 +139,11 @@ defmodule Library.Books do
   """
   def get_book!(id), do: Repo.get!(Book, id) |> Repo.preload(:book_loan)
 
+  def get_preloaded_book!(id) do
+    Book
+    |> Repo.get!(id)
+    |> Repo.preload([book_loan: [:user], book_queue: [], request: []])
+  end
   @doc """
   Gets a book using the title
 
