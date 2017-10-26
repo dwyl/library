@@ -11,6 +11,7 @@ defmodule LibraryWeb.PageController do
 
   def search(conn, %{"search" => %{"author" => _author, "isbn" => _isbn, "title" => title}, "web" => _web}) do
     books = GoogleBooks.google_books_search(title, "title")
+    |> replace_matches_with_db()
 
     render(conn, "index.html", books: books, web: "web")
   end
