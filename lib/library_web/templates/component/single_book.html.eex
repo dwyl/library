@@ -11,7 +11,7 @@
       <tbody>
         <tr>
           <td class="b f6 prs">
-            Availibility:
+            Availability:
           </td>
           <td class="dib">
             <% {colour, text} = loan_html(assigns.book, assigns.conn) %>
