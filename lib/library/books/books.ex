@@ -170,7 +170,7 @@ defmodule Library.Books do
     iex> get_book_by_title_and_authors("not a title")
     []
   """
-  def get_books_by_title_and_authors(%{"title" => title, "author_list" => author_list}), do: get_books_by_title_and_authors(title, author_list)
+
   def get_books_by_title_and_authors(%{title: title, author_list: author_list}), do: get_books_by_title_and_authors(title, author_list)
   def get_books_by_title_and_authors(title, author_list) do
     query = from b in "books",
@@ -220,11 +220,21 @@ defmodule Library.Books do
         |> Repo.preload(:author)
         |> create_authors_for_book!()
       end
-    else
-      false
     end
   end
 
+  @doc """
+    does exactly the same as create_book_authors! but returns the book that was inserted, rather than {:ok, :ok}
+  """
+  def create_book_authors_return_book!(attrs \\ %{}) do
+        book = create_book!(attrs)
+
+        book
+        |> Repo.preload(:author)
+        |> create_authors_for_book!()
+
+        book
+  end
   @doc """
   Adds all the authors of a book to the authors table.
 
