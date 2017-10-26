@@ -3,8 +3,16 @@
   color: #4ABDAC;
 }
 
+.dwyl-red{
+  color: #FF9C9C;
+}
+
 .bg-dwyl-teal{
   background-color: #4ABDAC;
+}
+
+.bg-dwyl-red{
+  background-color: #FF9C9C;
 }
 
 .w3-5{
@@ -40,6 +48,18 @@
 
 .f-dark-grey{
   fill: #4D4D4D;
+}
+
+.f-dwyl-teal{
+  fill: #4ABDAC;
+}
+
+.f-dwyl-red{
+  fill: #FF9C9C;
+}
+
+.f-white{
+  fill:#FFF;
 }
 
 .bg-light-grey{
