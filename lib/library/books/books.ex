@@ -98,7 +98,8 @@ defmodule Library.Books do
         preload: [:request, :book_loan],
         where: ilike(b.title, ^"%#{title}%"),
         join: a in assoc(b, :author),
-        where: ilike(a.author, ^"%#{author}%")
+        where: ilike(a.author, ^"%#{author}%"),
+        preload: [author: a]
       end
 
     Repo.all(query)

@@ -1,7 +1,7 @@
 defmodule LibraryWeb.AdminController do
   use LibraryWeb, :controller
 
-  alias Library.Books
+  import Library.Books
 
   plug LibraryWeb.Plugs.RequireAdmin
 
@@ -9,7 +9,7 @@ defmodule LibraryWeb.AdminController do
       book = params
       |> Map.put("author_list", String.split(authors, ";"))
       |> Map.put("owned", true)
-      |> Library.Books.create_book_authors_return_book!
+      |> create_book_authors_return_book!
 
       conn
       |> put_flash(:info, "Book added")
@@ -18,8 +18,8 @@ defmodule LibraryWeb.AdminController do
 
   def delete(conn, %{"id" => id}) do
 
-    Books.get_book!(id)
-    |> Books.delete_book_and_unique_authors
+    get_book!(id)
+    |> delete_book_and_unique_authors
 
     redirect(conn, to: page_path(conn, :index))
   end

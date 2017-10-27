@@ -46,7 +46,7 @@ defmodule LibraryWeb.LoginController do
         case add_user(user) do
             {:ok, user} ->
               conn
-              |> put_flash(:info, "Added to db succesfully")
+              |> put_flash(:info, "Logged in!")
               |> put_session(:user_id, user.id)
             {:error, "not a dwyl member"} ->
                conn

@@ -1,25 +1,27 @@
-<div class="w-100 db v-top mb2 pa3 bs-bb bg-white link dark-grey flex">
-  <div class="w-image mr3">
-    <%= img_tag(get_thumbnail(assigns.book, @conn), alt: "#{assigns.book.title} cover image", class: "mt1 h-100 h-image shadow-4") %>
-  </div>
-  <h2 class="f6 dib v-top ma0 fg1 lh-copy">
-    <%= assigns.book.title %><br/>
-    <span class="f6 v-top medium-grey ma0 fw3">
-      <%= Enum.join assigns.book.author_list, ", " %>
-    </span>
-    <%= if !Map.get(assigns.book, :web) && Map.get(@conn.assigns, :web) do %>
-      <br/>
-      <span class="dwyl-teal fw3">
-        In the library
+<div class="dib-l w-50-l w-100 mw-50-l ph1 f0">
+  <div class="w-100 db v-top mb2 pa3 bs-bb bg-white link dark-grey flex">
+    <div class="w-image mr3">
+      <%= img_tag(get_thumbnail(assigns.book, @conn), alt: "#{assigns.book.title} cover image", class: "mt1 h-100 h-image shadow-4") %>
+    </div>
+    <h2 class="f6 dib v-top ma0 fg1 lh-copy">
+      <%= assigns.book.title %><br/>
+      <span class="f6 v-top medium-grey ma0 fw3">
+        <%= Enum.join assigns.book.author_list, ", " %>
       </span>
-    <% end %>
-  </h2>
-  <div class="ml3 w4 mw3-5 pt1">
-    <%= link(get_button_text(assigns.book, assigns.conn), get_button_options(assigns.book, assigns.conn)) %>
-    <%= if Map.get(assigns.book, :id) do %>
-    <%= link("More info", to: page_path(assigns.conn, :show, assigns.book.id), class: "f6 w-100 tc ba link dim pv1 mb2 dib dwyl-teal") %>
-    <% else %>
-    <%= link("More info", to: "/show-web" <> "?" <> create_query_string(assigns.book), class: "f6 w-100 tc ba link dim pv1 mb2 dib dwyl-teal") %>
-    <% end %>
+      <%= if !Map.get(assigns.book, :web) && Map.get(@conn.assigns, :web) do %>
+        <br/>
+        <span class="dwyl-teal fw3">
+          In the library
+        </span>
+      <% end %>
+    </h2>
+    <div class="ml3 w4 mw3-5 pt1">
+      <%= link(get_button_text(assigns.book, assigns.conn), get_button_options(assigns.book, assigns.conn)) %>
+      <%= if Map.get(assigns.book, :id) do %>
+      <%= link("More info", to: page_path(assigns.conn, :show, assigns.book.id), class: "f6 w-100 tc ba link dim pv1 mb2 dib dwyl-teal") %>
+      <% else %>
+      <%= link("More info", to: "/show-web" <> "?" <> create_query_string(assigns.book), class: "f6 w-100 tc ba link dim pv1 mb2 dib dwyl-teal") %>
+      <% end %>
+    </div>
   </div>
 </div>
