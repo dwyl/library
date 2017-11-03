@@ -3,6 +3,8 @@ defmodule LibraryWeb.PageController do
   import Library.Books
   alias Library.GoogleBooks
 
+  plug LibraryWeb.Plugs.RequireAuth when action in [:checkout, :checkin]
+
   def index(conn, _params) do
     books = list_books()
 

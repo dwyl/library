@@ -59,6 +59,14 @@ defmodule LibraryWeb.PageControllerTest do
     assert html_response(conn, 302) =~ "redirected"
   end
 
+  test "GET /checkout/:id fails with no user on the connection", %{conn: conn} do
+    %{id: id} = Books.create_book!(%{title: "some title", author_list: ["some author"]})
+
+    conn = conn
+    |> get("/checkout/#{id}")
+    assert html_response(conn, 302) =~ "redirected"
+  end
+
   test "GET /checkout/:id checks in a book", %{conn: conn} do
     %{id: id} = Books.create_book!(%{title: "some title", author_list: ["some author"]})
 
