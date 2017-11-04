@@ -16,6 +16,7 @@ defmodule Library.GoogleBooks do
     search_query
       |> create_url(search_category)
       |> @httpoison.get
+      |> IO.inspect
       |> handle_google_api_response
   end
 
