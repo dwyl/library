@@ -10,7 +10,7 @@
 </div>
 <% end %>
 <%= if get_flash(@conn, :error) do %>
-<div role="alert" class="ph3 dwyl-red fade center db v-top b">
+<div role="alert" class="ph3 dwyl-red fade center pt3 db v-top b">
   <div class="br-100 bg-dwyl-red dib w2 h2 v-mid pt2 mr2">
     <svg aria-hidden="true" class="center db f-white" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"></path></svg>
   </div>
