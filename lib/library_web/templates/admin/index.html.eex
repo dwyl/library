@@ -1,9 +1,0 @@
-<div class="bg-white mt2 pt3">
-  <%= component("search_bar", conn: @conn) %>
-</div>
-<h2 class="f5 fw3 dwyl-teal pl3 mt3 mb2">In the dwyl library</h2>
-<div class="ph2">
-  <%= for book <- @books do %>
-    <%= component("book", conn: @conn, book: book) %>
-  <% end %>
-</div>

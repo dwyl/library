@@ -24,3 +24,31 @@
       </tbody>
     </table>
 </div>
+
+<%= if get_user(assigns.conn) |> admin? && Map.get(@book, :book_loan) do %>
+<h2 class="ma0 f5 dark-grey pl1 mt4">Book history</h2>
+<div class="w-100 bt pt3 light-grey">
+<table class="f6 tl min-w-50 dark-grey">
+  <thead>
+    <tr>
+      <th>Name</th><th>Checked out</th><th>Checked in</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for loan <- assigns.book.book_loan do %>
+    <tr>
+      <td class="pr2">
+        <%= "#{loan.user.first_name} (#{loan.user.username})" %>
+      </td>
+      <td class="pr2">
+        <%= to_readable_date(loan.inserted_at) %>
+      </td>
+      <td class="pr2">
+        <%= loan.checked_in && to_readable_date(loan.checked_in) || "Currently on loan" %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+<% end %>
