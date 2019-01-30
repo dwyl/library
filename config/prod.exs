@@ -32,4 +32,4 @@ config :library, Library.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
   database: "library_prod",
-  pool_size: 20
+  pool_size: System.get_env("POOL_SIZE")
