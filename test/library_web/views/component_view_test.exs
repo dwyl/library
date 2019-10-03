@@ -85,6 +85,10 @@ defmodule LibraryWeb.ComponentViewTest do
       assert ComponentView.get_button_text(@requested_book, @admin_user) != "Requested"
     end
 
+    test "get_button_text displays 'n/a' when not matched" do
+      assert ComponentView.get_button_text(%{}, @normal_user) == "n/a"
+    end
+
     test "get_button_options generates the correct options for 'Check in'", %{conn: conn} do
       admin_conn = Map.merge(conn, @admin_user)
       assert ComponentView.get_button_options(@on_loan_book, admin_conn) ==
