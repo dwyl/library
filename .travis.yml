@@ -1,6 +1,8 @@
 language: elixir
 elixir:
-  - 1.7
+  - 1.8
+otp_release:
+  - 21.0
 env:
   - MIX_ENV=test
 services: # ensure that Travis-CI provisions a DB for our tests
