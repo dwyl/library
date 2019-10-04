@@ -3,6 +3,8 @@ elixir:
   - 1.4
 env:
   - MIX_ENV=test
+services: # ensure that Travis-CI provisions a DB for our tests
+  - postgresql
 script:
   - mix do deps.get, compile, coveralls.json
 after_success:
