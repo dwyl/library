@@ -2,8 +2,8 @@ defmodule LibraryWeb.AdminControllerTest do
   use LibraryWeb.ConnCase
   import Plug.Test
   alias Library.Books
-  alias Library.Users.User
   alias Library.Users
+  alias Library.Users.User
 
   @admin %{
     email: "hello@dwyl.com",
