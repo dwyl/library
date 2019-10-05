@@ -35,6 +35,17 @@ defmodule LibraryWeb.LoginControllerTest do
     assert html_response(conn, 302) =~ "redirected"
   end
 
+  test "GET /login/github-callback with invalid github orgs response", %{conn: conn} do
+    conn = get conn, "/login/github-callback", %{"code" => "159"}
+    assert html_response(conn, 302) =~ "redirected"
+  end
+
+  # @tag :pending
+  test "GET /login/github-callback with invalid github emails respons", %{conn: conn} do
+    conn = get conn, "/login/github-callback", %{"code" => "260"}
+    assert html_response(conn, 302) =~ "redirected"
+  end
+
   test "GET /login/github-callback with success, with user already in db", %{conn: conn} do
     Users.create_user(%{
       email: "indiana@dwyl.com",
