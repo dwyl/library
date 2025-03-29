@@ -13,6 +13,14 @@ defmodule Library.ElixirAuthGithub.InMemory do
     {:ok, %{"name" => "indiana", "login" => "temple-of-doom", "access_token" => "789"}}
   end
 
+  def github_auth("159") do
+    {:ok, %{"name" => "indiana", "login" => "temple-of-doom", "access_token" => "159"}}
+  end
+
+  def github_auth("260") do
+    {:ok, %{"name" => "indiana", "login" => "temple-of-doom", "access_token" => "260"}}
+  end
+
   def github_auth("235") do
     {:ok, %{"name" => "indiana", "login" => "temple-of-doom", "access_token" => "235"}}
   end

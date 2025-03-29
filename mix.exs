@@ -47,7 +47,7 @@ defmodule Library.Mixfile do
       {:pre_commit, "~> 0.1.4"},
       {:elixir_auth_github, "~> 0.1.4"},
       {:envy, "~> 1.1.1"},
-      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test}
     ]
   end

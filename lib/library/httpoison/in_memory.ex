@@ -69,6 +69,18 @@ defmodule Library.HTTPoison.InMemory do
     {:ok, %{body: "[{\"primary\":true,\"email\":\"indiana@dwyl.com\"}]"}}
   end
 
+  def get("https://api.github.com/user/orgs", [{"Accept", "application/json"}, {"Authorization", "token 159"}]) do
+    {:ok, %{body: "{}"}}
+  end
+
+  def get("https://api.github.com/user/orgs", [{"Accept", "application/json"}, {"Authorization", "token 260"}]) do
+    {:ok, %{body: "[{\"login\":\"other\"}]"}}
+  end
+
+  def get("https://api.github.com/user/emails", [{"Accept", "application/json"}, {"Authorization", "token 260"}]) do
+    {:ok, %{body: "{}"}}
+  end
+
   def get("https://api.github.com/user/orgs", [{"Accept", "application/json"}, {"Authorization", "token 789"}]) do
     {:ok, %{body: "[{\"login\":\"other\"}]"}}
   end
